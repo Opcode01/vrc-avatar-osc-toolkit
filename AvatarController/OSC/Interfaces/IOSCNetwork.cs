@@ -3,8 +3,10 @@
 /// </summary>
 namespace OSC
 {
-    internal interface IOSCNetwork
+    public interface IOSCNetwork
     {
-        public void SendMessage(string address, float value);
+        public void SendMessage(string address, object value);
+
+        public event EventHandler<OSCMsgReceivedEventArgs> MessageReceived;
     }
 }

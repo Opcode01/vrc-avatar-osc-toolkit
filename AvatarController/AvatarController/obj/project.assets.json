@@ -1,11 +1,47 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {}
+    "net6.0": {
+      "OSC/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "SharpOSC": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/OSC.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OSC.dll": {}
+        }
+      },
+      "SharpOSC/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/SharpOSC.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SharpOSC.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "OSC/1.0.0": {
+      "type": "project",
+      "path": "../OSC/OSC.csproj",
+      "msbuildProject": "../OSC/OSC.csproj"
+    },
+    "SharpOSC/1.0.0": {
+      "type": "project",
+      "path": "../SharpOSC/SharpOSC.csproj",
+      "msbuildProject": "../SharpOSC/SharpOSC.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net6.0": []
+    "net6.0": [
+      "OSC >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Austin-PC\\.nuget\\packages\\": {}
@@ -33,7 +69,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj": {
+              "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
