@@ -1,0 +1,107 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0": {
+      "OSC/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "SharpOSC": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/OSC.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OSC.dll": {}
+        }
+      },
+      "SharpOSC/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/SharpOSC.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SharpOSC.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "OSC/1.0.0": {
+      "type": "project",
+      "path": "../OSC/OSC.csproj",
+      "msbuildProject": "../OSC/OSC.csproj"
+    },
+    "SharpOSC/1.0.0": {
+      "type": "project",
+      "path": "../SharpOSC/SharpOSC.csproj",
+      "msbuildProject": "../SharpOSC/SharpOSC.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net6.0": [
+      "OSC >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\AvatarController\\AvatarController.csproj",
+      "projectName": "AvatarController",
+      "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\AvatarController\\AvatarController.csproj",
+      "packagesPath": "C:\\Users\\Austin-PC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\AvatarController\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Austin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "projectReferences": {
+            "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj": {
+              "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net6.0": {
+        "targetAlias": "net6.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
