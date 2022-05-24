@@ -1,14 +1,15 @@
 ﻿
-
 namespace AvatarController
 {
     using System;
+    using HapticsModule;
     using OSC;
 
     internal class Program
     {
         private static bool _isRunning = true;
         private static IOSCNetwork _network;
+        private static ControllerHaptics _controllerHaptics;
 
         static void Main(string[] args)
         {
@@ -26,12 +27,21 @@ namespace AvatarController
                 //Console.WriteLine($"We received a message! From: {msg.Address} with {msg.Contents.Count} arguments");
             };
 
+            //Initialize ControllerHaptics
+            _controllerHaptics = new ControllerHaptics();
+            _isRunning &= _controllerHaptics.Initialize();
+
             //Main thread
-            Console.WriteLine("All modules loaded - controller running");
-            while (_isRunning)
+            if (_isRunning)
             {
-                // Do stuff
+                Console.WriteLine("All modules loaded - controller running");
+                while (_isRunning)
+                {
+                    // Do stuff
+                }
             }
+
+            Exit();
         }
 
         private static void Exit()

@@ -41,7 +41,7 @@ namespace OSC
         {
             var message = new SharpOSC.OscMessage(address, value);
             _udpSender.Send(message);
-            Console.WriteLine($"SEND: \t ENDPOINT: {HOST} \t ADDRESS: {address} \t VALUE: {value}");
+            Console.WriteLine($"SEND: \t ENDPOINT: {HOST} \t ADDRESS: {address} \t {value.GetType()}: {value}");
         }
 
         public event EventHandler<OSCMsgReceivedEventArgs> MessageReceived;

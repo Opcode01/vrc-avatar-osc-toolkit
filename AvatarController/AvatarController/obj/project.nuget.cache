@@ -1,8 +1,20 @@
 {
   "version": 2,
-  "dgSpecHash": "BOF6mdBwI16mtN1Ybdy04VdRyqwuEelvzLakyrja1S/MdClTwToWxj0FjDwjgSW39ox+1ap5e0R2OxsQLJ7H5A==",
+  "dgSpecHash": "gtNnHgtHJOI6Vf8qveXM7BIfYl1t4wOiVTJ1+Q9DLBfJ0CDCQzMPGERlx6rD546CFWVlQKS8CzbWcNq+O0ce4w==",
   "success": true,
   "projectFilePath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\AvatarController\\AvatarController.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\microsoft.dotnet.platformabstractions\\3.1.6\\microsoft.dotnet.platformabstractions.3.1.6.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\microsoft.extensions.dependencymodel\\5.0.0\\microsoft.extensions.dependencymodel.5.0.0.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\openxr.headers\\1.0.10.2\\openxr.headers.1.0.10.2.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\openxr.loader\\1.0.10.2\\openxr.loader.1.0.10.2.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\silk.net.core\\2.15.0\\silk.net.core.2.15.0.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\silk.net.maths\\2.15.0\\silk.net.maths.2.15.0.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\silk.net.openxr\\2.15.0\\silk.net.openxr.2.15.0.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\Austin-PC\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

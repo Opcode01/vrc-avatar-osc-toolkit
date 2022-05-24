@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HapticsModule\HapticsModule.csproj" />
     <ProjectReference Include="..\OSC\OSC.csproj" />
   </ItemGroup>
 
