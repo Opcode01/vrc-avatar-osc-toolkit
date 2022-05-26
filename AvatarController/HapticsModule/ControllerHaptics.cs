@@ -1,6 +1,7 @@
 ﻿namespace HapticsModule
 {
     using System;
+    using System.Linq;
     using System.Text;
     using Silk.NET.Core.Native;
     using Silk.NET.OpenXR;
@@ -34,7 +35,7 @@
                     extensionProperties[i] = new ExtensionProperties() { Type = StructureType.TypeExtensionProperties };
                 }
                 var result = _xrApi.EnumerateInstanceExtensionProperties("", extensionCount, &extensionCount, extensionProperties);
-                if(result == Result.Success && extensionProperties != null)
+                if(result == Result.Success && extensionProperties.Count() != 0)
                 {
                     foreach (var extensionProperty in extensionProperties)
                     {
@@ -48,6 +49,34 @@
                     return _isInitialized;
                 }
 
+                //Log layers and any of their extensions
+                UInt32 layerCount = 0;
+                _xrApi.EnumerateApiLayerProperties(&layerCount, null);
+
+                //Get layers
+                ApiLayerProperties[] layerProperties = new ApiLayerProperties[layerCount];
+                for (int i = 0; i < layerCount; i++)
+                {
+                    layerProperties[i] = new ApiLayerProperties() { Type = StructureType.TypeApiLayerProperties };
+                }
+                result = _xrApi.EnumerateApiLayerProperties(&layerCount, layerProperties);
+                if(result == Result.Success && layerProperties.Count() != 0)
+                {
+                    foreach(var layerProperty in layerProperties)
+                    {
+                        string layerName = Encoding.UTF8.GetString(layerProperty.LayerName, 128);
+                        string layerDesc = Encoding.UTF8.GetString(layerProperty.Description, 128);
+                        Console.WriteLine($"Found Layer - {layerName}, LayerVersion: {layerProperty.LayerVersion}, LayerDesc: {layerDesc}");
+                    }
+                }
+
+                //Select extensions
+                string[] requestedExtensions = { "XR_MND_headless" };
+                //This statement only selects the requested extensions if the system has support for them
+                string[] selectedExtensions = requestedExtensions.Where(requestedExt => extensionProperties.Where(prop => Encoding.UTF8.GetString(prop.ExtensionName, 128).Replace("\0", string.Empty) == requestedExt).Count() > 0).ToArray();
+                
+                //Select layers
+
                 //Create AppInfo
                 ApplicationInfo appInfo = new ApplicationInfo() { ApplicationVersion = 1, ApiVersion = XR_MAKE_VERSION(1, 0, 22) }; //TODO: We should actually get the version from the openxr_loader.dll if possible
                 Encoding.UTF8.GetBytes("AppName", new Span<byte>(appInfo.ApplicationName, 128));
@@ -56,8 +85,11 @@
                 InstanceCreateInfo instanceInfo = new InstanceCreateInfo()
                 {
                     Type = StructureType.TypeInstanceCreateInfo,
-                    ApplicationInfo = appInfo
+                    ApplicationInfo = appInfo,
+                    EnabledExtensionCount = (uint)requestedExtensions.Length,
+                    EnabledExtensionNames = (byte**)SilkMarshal.StringArrayToPtr(requestedExtensions, NativeStringEncoding.UTF8)
                 };
+
                 result = _xrApi.CreateInstance(instanceInfo, ref _xrInstance);
                 if (result != Result.Success)
                 {
