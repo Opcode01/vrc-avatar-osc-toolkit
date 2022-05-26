@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvatarController", "AvatarController\AvatarController.csproj", "{1F53EF0F-5668-43B5-B40D-579EC8D38086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvatarController", "AvatarController\AvatarController.csproj", "{1F53EF0F-5668-43B5-B40D-579EC8D38086}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOSC", "SharpOSC\SharpOSC.csproj", "{9B922B0B-5595-4E05-8270-F63FAAA6C299}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSC", "OSC\OSC.csproj", "{196CC366-C33B-49E8-B309-4C9A50F7562E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSC", "OSC\OSC.csproj", "{196CC366-C33B-49E8-B309-4C9A50F7562E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OVR", "OVR\OVR.csproj", "{E8D0F504-BF07-4D8C-B0B5-2AF87B477C9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HapticsModule", "HapticsModule\HapticsModule.csproj", "{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{196CC366-C33B-49E8-B309-4C9A50F7562E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{196CC366-C33B-49E8-B309-4C9A50F7562E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{196CC366-C33B-49E8-B309-4C9A50F7562E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8D0F504-BF07-4D8C-B0B5-2AF87B477C9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8D0F504-BF07-4D8C-B0B5-2AF87B477C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8D0F504-BF07-4D8C-B0B5-2AF87B477C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8D0F504-BF07-4D8C-B0B5-2AF87B477C9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
