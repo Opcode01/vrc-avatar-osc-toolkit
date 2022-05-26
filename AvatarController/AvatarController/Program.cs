@@ -8,7 +8,8 @@
     {
         private static bool _isRunning = true;
         private static IOSCNetwork _network;
-        private static IControllerHaptics _controllerHaptics;
+        private static IControllerHaptics _leftControllerHaptics;
+        private static IControllerHaptics _rightControllerHaptics;
 
         static void Main(string[] args)
         {
@@ -19,18 +20,22 @@
                 _isRunning = false;
             };
 
+            //Initialize HapticsModule
+            _leftControllerHaptics = new OVRControllerHaptics();
+            _isRunning &= _leftControllerHaptics.Initialize(ControllerType.LEFTHAND);
+            _rightControllerHaptics = new OVRControllerHaptics();
+            _isRunning &= _rightControllerHaptics.Initialize(ControllerType.RIGHTHAND);
+
             //Initialize SharpOSCNetwork
             _network = new SharpOSCNetwork();
-            var messageHandlers = new List<EventHandler<OSCMsgReceivedEventArgs>>() { 
+            var messageHandlers = new List<EventHandler<OSCMsgReceivedEventArgs>>() {
                 (object? sender, OSCMsgReceivedEventArgs msg) => { 
                     //Console.WriteLine($"We received a message! From: {msg.Address} with {msg.Contents.Count} arguments");
+                    _leftControllerHaptics.TriggerHapticPulse();
+                    _rightControllerHaptics.TriggerHapticPulse();
                 }
-            };            
+            };
             _isRunning &= _network.Initialize(messageHandlers);
-
-            //Initialize HapticsModule
-            _controllerHaptics = new OVRControllerHaptics();
-            _isRunning &= _controllerHaptics.Initialize();
 
             //Main thread
             if (_isRunning)
@@ -49,7 +54,7 @@
         {
             Console.WriteLine("Exiting...");
             _isRunning = false;
-            _controllerHaptics.Dispose();
+            _leftControllerHaptics.Dispose();
         }
     }
 }

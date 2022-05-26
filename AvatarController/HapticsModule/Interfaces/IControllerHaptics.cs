@@ -2,6 +2,7 @@
 {
     public interface IControllerHaptics : IDisposable
     {
-        bool Initialize();
+        bool Initialize(ControllerType controllerType);
+        void TriggerHapticPulse();
     }
 }
