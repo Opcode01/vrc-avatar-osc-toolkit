@@ -43,11 +43,11 @@
             return _isInitialized;
         }
 
-        public void TriggerHapticPulse()
+        public void TriggerHapticPulse(ushort intensity)
         {
             if (_isInitialized)
             {
-                OpenVR.System.TriggerHapticPulse(_controllerIndex, (uint)EVRControllerAxisType.k_eControllerAxis_None, 1000);
+                OpenVR.System.TriggerHapticPulse(_controllerIndex, (uint)EVRControllerAxisType.k_eControllerAxis_None, intensity);
             }
             else
             {

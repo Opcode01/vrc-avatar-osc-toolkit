@@ -73,7 +73,7 @@ namespace OSC
                 var messageReceived = (OscMessage)packet;
                 foreach(var value in messageReceived.Arguments)
                 {
-                    Console.WriteLine($"RECEIVE: \t ENDPOINT: {HOST}:{RECV_PORT} \t ADDRESS: {messageReceived.Address} \t {value.GetType()}: {value}"); //TODO: Better logging
+                    //DEBUG: Console.WriteLine($"RECEIVE: \t ENDPOINT: {HOST}:{RECV_PORT} \t ADDRESS: {messageReceived.Address} \t {value.GetType()}: {value}"); //TODO: Better logging
                 }
 
                 MessageReceived?.Invoke(this, new OSCMsgReceivedEventArgs(messageReceived.Address, messageReceived.Arguments));

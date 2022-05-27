@@ -3,6 +3,6 @@
     public interface IControllerHaptics : IDisposable
     {
         bool Initialize(ControllerType controllerType);
-        void TriggerHapticPulse();
+        void TriggerHapticPulse(ushort intensity);
     }
 }
