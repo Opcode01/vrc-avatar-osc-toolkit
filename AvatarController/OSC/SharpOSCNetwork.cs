@@ -17,34 +17,54 @@ namespace OSC
         private UDPSender _udpSender = null;
         private UDPListener _udpListener = null;
 
+        private bool _isInitialized = false;
+
         public SharpOSCNetwork()
         {
-            Console.WriteLine("Initializing SharpOSCNetwork...");
 
-            _udpSender = new SharpOSC.UDPSender(HOST, SEND_PORT);
-            _udpListener = new SharpOSC.UDPListener(RECV_PORT, OnMessageReceived); 
         }
 
         public SharpOSCNetwork(string host, int sendPort, int receivePort)
         {
-            Console.WriteLine("Initializing SharpOSCNetwork...");
-
             HOST = host;
             SEND_PORT = sendPort;   
             RECV_PORT = receivePort;
+        }
 
-            _udpSender = new SharpOSC.UDPSender(HOST, SEND_PORT);
-            _udpListener = new SharpOSC.UDPListener(RECV_PORT, OnMessageReceived); 
+        public bool Initialize(ICollection<EventHandler<OSCMsgReceivedEventArgs>>? eventHandlers = null)
+        {
+            Console.WriteLine($"{this.GetType().Name} - Initializing...");      //TODO: Better logging
+            try
+            {
+                _udpSender = new SharpOSC.UDPSender(HOST, SEND_PORT);
+                _udpListener = new SharpOSC.UDPListener(RECV_PORT, OnMessageReceived);
+
+                if (eventHandlers != null)
+                {
+                    foreach (var handler in eventHandlers)
+                    {
+                        MessageReceived += handler;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error with {this.GetType().Name} initialization - \n{ex.Message}"); //TODO: Better logging
+            }
+
+            _isInitialized = (_udpListener != null && _udpSender != null);
+            Console.WriteLine($"{this.GetType().Name} - Init result: {_isInitialized}"); //TODO: Better logging
+            return _isInitialized;
         }
 
         public void SendMessage(string address, object value)
         {
             var message = new SharpOSC.OscMessage(address, value);
             _udpSender.Send(message);
-            Console.WriteLine($"SEND: \t ENDPOINT: {HOST} \t ADDRESS: {address} \t VALUE: {value}");
+            Console.WriteLine($"SEND: \t ENDPOINT: {HOST} \t ADDRESS: {address} \t VALUE: {value}"); //TODO: Better logging
         }
 
-        public event EventHandler<OSCMsgReceivedEventArgs> MessageReceived;
+        public event EventHandler<OSCMsgReceivedEventArgs>? MessageReceived;
 
         private void OnMessageReceived(OscPacket packet)
         {
@@ -53,7 +73,7 @@ namespace OSC
                 var messageReceived = (OscMessage)packet;
                 foreach(var value in messageReceived.Arguments)
                 {
-                    Console.WriteLine($"RECEIVE: \t ENDPOINT: {HOST}:{RECV_PORT} \t ADDRESS: {messageReceived.Address} \t {value.GetType()}: {value}");
+                    //DEBUG: Console.WriteLine($"RECEIVE: \t ENDPOINT: {HOST}:{RECV_PORT} \t ADDRESS: {messageReceived.Address} \t {value.GetType()}: {value}"); //TODO: Better logging
                 }
 
                 MessageReceived?.Invoke(this, new OSCMsgReceivedEventArgs(messageReceived.Address, messageReceived.Arguments));
@@ -64,7 +84,7 @@ namespace OSC
         {
             _udpSender.Close();
             _udpListener.Close();
-            Console.WriteLine("UDP Connections closed.");
+            Console.WriteLine("UDP Connections closed."); //TODO: Better logging
         }
     }
 }

@@ -5,8 +5,10 @@ namespace OSC
 {
     public interface IOSCNetwork
     {
-        public void SendMessage(string address, object value);
+        bool Initialize(ICollection<EventHandler<OSCMsgReceivedEventArgs>>? eventHandlers = null);
 
-        public event EventHandler<OSCMsgReceivedEventArgs> MessageReceived;
+        void SendMessage(string address, object value);
+
+        event EventHandler<OSCMsgReceivedEventArgs> MessageReceived;
     }
 }

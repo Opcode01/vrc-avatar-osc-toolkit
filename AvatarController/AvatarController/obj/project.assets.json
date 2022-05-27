@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "HapticsModule/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "OVR": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/HapticsModule.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/HapticsModule.dll": {}
+        }
+      },
       "OSC/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -13,6 +26,16 @@
         },
         "runtime": {
           "bin/placeholder/OSC.dll": {}
+        }
+      },
+      "OVR/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/OVR.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OVR.dll": {}
         }
       },
       "SharpOSC/1.0.0": {
@@ -27,10 +50,20 @@
     }
   },
   "libraries": {
+    "HapticsModule/1.0.0": {
+      "type": "project",
+      "path": "../HapticsModule/HapticsModule.csproj",
+      "msbuildProject": "../HapticsModule/HapticsModule.csproj"
+    },
     "OSC/1.0.0": {
       "type": "project",
       "path": "../OSC/OSC.csproj",
       "msbuildProject": "../OSC/OSC.csproj"
+    },
+    "OVR/1.0.0": {
+      "type": "project",
+      "path": "../OVR/OVR.csproj",
+      "msbuildProject": "../OVR/OVR.csproj"
     },
     "SharpOSC/1.0.0": {
       "type": "project",
@@ -40,6 +73,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "HapticsModule >= 1.0.0",
       "OSC >= 1.0.0"
     ]
   },
@@ -70,6 +104,9 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
+            "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj": {
+              "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj"
+            },
             "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj": {
               "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj"
             }

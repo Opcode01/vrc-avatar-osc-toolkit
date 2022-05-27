@@ -28,8 +28,69 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
+              "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj": {
+                "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj"
+              },
               "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj": {
                 "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj",
+        "projectName": "HapticsModule",
+        "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj",
+        "packagesPath": "C:\\Users\\Austin-PC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Austin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OVR\\OVR.csproj": {
+                "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OVR\\OVR.csproj"
               }
             }
           }
@@ -90,6 +151,60 @@
                 "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\SharpOSC\\SharpOSC.csproj"
               }
             }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OVR\\OVR.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OVR\\OVR.csproj",
+        "projectName": "OVR",
+        "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OVR\\OVR.csproj",
+        "packagesPath": "C:\\Users\\Austin-PC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OVR\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Austin-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
           }
         },
         "warningProperties": {
