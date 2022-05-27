@@ -1,14 +1,12 @@
-﻿/// <summary>
-/// Namespace OSC - A wrapper library to provide interoperability across various OSC communication implementations
-/// </summary>
-namespace OSC
+﻿namespace OSCModule
 {
+    using AvatarController.Infrastructure;
     using SharpOSC;
 
     /// <summary>
     /// An implementation of OSCNetwork using SharpOSC
     /// </summary>
-    public class SharpOSCNetwork : IOSCNetwork, IDisposable
+    public class SharpOSCNetwork : IOSCNetwork
     {
         private string HOST = "127.0.0.1";
         private int SEND_PORT = 9000;
@@ -31,25 +29,17 @@ namespace OSC
             RECV_PORT = receivePort;
         }
 
-        public bool Initialize(ICollection<EventHandler<OSCMsgReceivedEventArgs>>? eventHandlers = null)
+        public bool Initialize()
         {
             Console.WriteLine($"{this.GetType().Name} - Initializing...");      //TODO: Better logging
             try
             {
                 _udpSender = new SharpOSC.UDPSender(HOST, SEND_PORT);
                 _udpListener = new SharpOSC.UDPListener(RECV_PORT, OnMessageReceived);
-
-                if (eventHandlers != null)
-                {
-                    foreach (var handler in eventHandlers)
-                    {
-                        MessageReceived += handler;
-                    }
-                }
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Error with {this.GetType().Name} initialization - \n{ex.Message}"); //TODO: Better logging
+                Console.WriteLine($"Error with {this.GetType().Name} initialization - {ex.Message}, \n {ex.StackTrace}"); //TODO: Better logging
             }
 
             _isInitialized = (_udpListener != null && _udpSender != null);
@@ -64,7 +54,7 @@ namespace OSC
             Console.WriteLine($"SEND: \t ENDPOINT: {HOST} \t ADDRESS: {address} \t VALUE: {value}"); //TODO: Better logging
         }
 
-        public event EventHandler<OSCMsgReceivedEventArgs>? MessageReceived;
+        public event EventHandler<MsgReceivedEventArgs>? MessageReceived;
 
         private void OnMessageReceived(OscPacket packet)
         {
@@ -76,7 +66,7 @@ namespace OSC
                     //DEBUG: Console.WriteLine($"RECEIVE: \t ENDPOINT: {HOST}:{RECV_PORT} \t ADDRESS: {messageReceived.Address} \t {value.GetType()}: {value}"); //TODO: Better logging
                 }
 
-                MessageReceived?.Invoke(this, new OSCMsgReceivedEventArgs(messageReceived.Address, messageReceived.Arguments));
+                MessageReceived?.Invoke(this, new MsgReceivedEventArgs(messageReceived.Address, messageReceived.Arguments));
             }
         }
 

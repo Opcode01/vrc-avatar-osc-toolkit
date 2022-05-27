@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -9,8 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AvatarControllerCore\AvatarController.Infrastructure.csproj" />
-    <ProjectReference Include="..\HapticsModule\HapticsModule.csproj" />
-    <ProjectReference Include="..\OSC\OSCModule.csproj" />
+    <ProjectReference Include="..\SharpOSC\SharpOSC.csproj" />
   </ItemGroup>
 
 </Project>

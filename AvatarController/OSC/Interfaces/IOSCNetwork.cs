@@ -1,14 +1,12 @@
 ﻿/// <summary>
 /// Namespace OSC - A wrapper library to provide interoperability across various OSC communication implementations
 /// </summary>
-namespace OSC
+namespace OSCModule
 {
-    public interface IOSCNetwork
+    using AvatarController.Infrastructure.Interfaces;
+
+    public interface IOSCNetwork : INetwork, IDisposable
     {
-        bool Initialize(ICollection<EventHandler<OSCMsgReceivedEventArgs>>? eventHandlers = null);
-
         void SendMessage(string address, object value);
-
-        event EventHandler<OSCMsgReceivedEventArgs> MessageReceived;
     }
 }

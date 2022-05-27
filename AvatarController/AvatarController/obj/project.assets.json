@@ -2,10 +2,21 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "AvatarController.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/AvatarController.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AvatarController.Infrastructure.dll": {}
+        }
+      },
       "HapticsModule/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "AvatarController.Infrastructure": "1.0.0",
           "OVR": "1.0.0"
         },
         "compile": {
@@ -15,17 +26,18 @@
           "bin/placeholder/HapticsModule.dll": {}
         }
       },
-      "OSC/1.0.0": {
+      "OSCModule/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "AvatarController.Infrastructure": "1.0.0",
           "SharpOSC": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/OSC.dll": {}
+          "bin/placeholder/OSCModule.dll": {}
         },
         "runtime": {
-          "bin/placeholder/OSC.dll": {}
+          "bin/placeholder/OSCModule.dll": {}
         }
       },
       "OVR/1.0.0": {
@@ -50,15 +62,20 @@
     }
   },
   "libraries": {
+    "AvatarController.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../AvatarControllerCore/AvatarController.Infrastructure.csproj",
+      "msbuildProject": "../AvatarControllerCore/AvatarController.Infrastructure.csproj"
+    },
     "HapticsModule/1.0.0": {
       "type": "project",
       "path": "../HapticsModule/HapticsModule.csproj",
       "msbuildProject": "../HapticsModule/HapticsModule.csproj"
     },
-    "OSC/1.0.0": {
+    "OSCModule/1.0.0": {
       "type": "project",
-      "path": "../OSC/OSC.csproj",
-      "msbuildProject": "../OSC/OSC.csproj"
+      "path": "../OSC/OSCModule.csproj",
+      "msbuildProject": "../OSC/OSCModule.csproj"
     },
     "OVR/1.0.0": {
       "type": "project",
@@ -73,8 +90,9 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "AvatarController.Infrastructure >= 1.0.0",
       "HapticsModule >= 1.0.0",
-      "OSC >= 1.0.0"
+      "OSCModule >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -104,11 +122,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
+            "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\AvatarControllerCore\\AvatarController.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\AvatarControllerCore\\AvatarController.Infrastructure.csproj"
+            },
             "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj": {
               "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj"
             },
-            "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj": {
-              "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSC.csproj"
+            "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSCModule.csproj": {
+              "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\OSC\\OSCModule.csproj"
             }
           }
         }
