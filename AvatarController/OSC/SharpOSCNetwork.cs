@@ -1,7 +1,7 @@
 ﻿namespace OSCModule
 {
     using AvatarController.Infrastructure;
-    using OSCModule.Interfaces;
+    using global::OSCModule.Interfaces;
     using SharpOSC;
 
     /// <summary>

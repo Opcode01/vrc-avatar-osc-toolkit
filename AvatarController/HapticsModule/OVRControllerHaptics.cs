@@ -1,6 +1,6 @@
 ﻿namespace HapticsModule
 {
-    using HapticsModule.Interfaces;
+    using global::HapticsModule.Interfaces;
     using Valve.VR;
 
     public class OVRControllerHaptics : IControllerHaptics

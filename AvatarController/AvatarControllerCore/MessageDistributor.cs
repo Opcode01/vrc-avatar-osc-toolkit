@@ -6,6 +6,7 @@
     {
         private readonly Dictionary<string, EventHandler<MsgReceivedEventArgs>> _bindings;
         private readonly ICollection<INetwork> _networks;
+        private bool _pauseReceiving = false;
 
         public MessageDistributor()
         {
@@ -29,15 +30,29 @@
             _bindings.Add(address, eventHandler);
         }
 
+        //TODO: This may be something we can get rid of when we have DI - we can instead LazyImport all INetworks directly to the using class
+        public ICollection<INetwork> GetNetworks()
+        {
+            return new List<INetwork>(_networks);
+        }
+
+        public void ToggleReceiving()
+        {
+            _pauseReceiving = !_pauseReceiving;
+        }
+
         private void OnMessageReceived(object? sender, MsgReceivedEventArgs eventArgs)
         {
-            //DEBUG: Console.WriteLine($"{this.GetType().Name} -- Received message From: \t {sender?.GetType().Name} \t Address: {eventArgs.Address}"); //TODO: Better logging
-            foreach (var binding in _bindings)
+            if (!_pauseReceiving)
             {
-                if(eventArgs.Address == binding.Key)
+                //DEBUG: Console.WriteLine($"{this.GetType().Name} -- Received message From: \t {sender?.GetType().Name} \t Address: {eventArgs.Address}"); //TODO: Better logging
+                foreach (var binding in _bindings)
                 {
-                    //DEBUG: Console.WriteLine($"Found binding for {eventArgs.Address}!");
-                    binding.Value?.Invoke(this, eventArgs);
+                    if (eventArgs.Address == binding.Key)
+                    {
+                        //DEBUG: Console.WriteLine($"Found binding for {eventArgs.Address}!");
+                        binding.Value?.Invoke(this, eventArgs);
+                    }
                 }
             }
         }

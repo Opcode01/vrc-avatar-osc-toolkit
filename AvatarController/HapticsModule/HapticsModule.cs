@@ -2,21 +2,20 @@
 {
     using AvatarController.Infrastructure;
     using AvatarController.Infrastructure.Interfaces;
-    using HapticsModule.Interfaces;
+    using global::HapticsModule.Interfaces;
     using Valve.VR;
 
     /// <summary>
     /// External Dependencies - 
     ///     Valve.VR (openvr_api.dll)    
     /// </summary>
-    public class HapticsModuleBase : IModule
+    public class HapticsModule : ModuleBase
     {
-        private bool _isInitialized = false;
         private readonly IControllerHaptics _leftControllerHaptics;
         private readonly IControllerHaptics _rightControllerHaptics;
         private readonly IMessageDistributor _messageDistributor;
 
-        public HapticsModuleBase(IMessageDistributor messageDistributor)
+        public HapticsModule(IMessageDistributor messageDistributor)
         {
             _messageDistributor = messageDistributor;
 
@@ -27,7 +26,7 @@
         }
 
         //Load and initialize dependencies
-        public bool Initialize()
+        public override bool Initialize()
         {
             if (_isInitialized)
             {
@@ -85,7 +84,7 @@
             Console.WriteLine($"{this.GetType().Name} -- Triggered {controllerType} \t Proximity value: {proximity} \t Normalized Intensity: {intensity}");
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             OpenVR.Shutdown();
             _isInitialized = false;

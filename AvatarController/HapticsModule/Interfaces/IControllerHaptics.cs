@@ -1,6 +1,6 @@
 ﻿namespace HapticsModule.Interfaces
 {
-    public interface IControllerHaptics
+    internal interface IControllerHaptics
     {
         bool Initialize(ControllerType controllerType);
         void TriggerHapticPulse(ushort intensity);

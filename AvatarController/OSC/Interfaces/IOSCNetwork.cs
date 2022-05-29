@@ -1,12 +1,8 @@
-﻿/// <summary>
-/// Namespace OSC - A wrapper library to provide interoperability across various OSC communication implementations
-/// </summary>
-namespace OSCModule.Interfaces
+﻿namespace OSCModule.Interfaces
 {
     using AvatarController.Infrastructure.Interfaces;
 
-    public interface IOSCNetwork : INetwork, IDisposable
+    internal interface IOSCNetwork : INetwork, IDisposable
     {
-        void SendMessage(string address, object value);
     }
 }

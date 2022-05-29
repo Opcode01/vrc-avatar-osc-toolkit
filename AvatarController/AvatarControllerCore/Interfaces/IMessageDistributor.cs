@@ -17,5 +17,16 @@
         /// <param name="address">The message address to listen for</param>
         /// <param name="eventHandler">The action to perform</param>
         public void AddBinding(string address, EventHandler<MsgReceivedEventArgs> eventHandler);
+
+        /// <summary>
+        /// Returns the INetworks attached to this instance
+        /// </summary>
+        /// <returns></returns>
+        public ICollection<INetwork> GetNetworks();
+
+        /// <summary>
+        /// Toggles the receiving of messages
+        /// </summary>
+        public void ToggleReceiving();
     }
 }

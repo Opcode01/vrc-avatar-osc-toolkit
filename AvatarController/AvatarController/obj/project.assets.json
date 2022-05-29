@@ -12,6 +12,20 @@
           "bin/placeholder/AvatarController.Infrastructure.dll": {}
         }
       },
+      "EyeTrackingModule/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "AvatarController.Infrastructure": "1.0.0",
+          "VarjoNative": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/EyeTrackingModule.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/EyeTrackingModule.dll": {}
+        }
+      },
       "HapticsModule/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -58,6 +72,16 @@
         "runtime": {
           "bin/placeholder/SharpOSC.dll": {}
         }
+      },
+      "VarjoNative/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/VarjoNative.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/VarjoNative.dll": {}
+        }
       }
     }
   },
@@ -66,6 +90,11 @@
       "type": "project",
       "path": "../AvatarControllerCore/AvatarController.Infrastructure.csproj",
       "msbuildProject": "../AvatarControllerCore/AvatarController.Infrastructure.csproj"
+    },
+    "EyeTrackingModule/1.0.0": {
+      "type": "project",
+      "path": "../EyeTrackingModule/EyeTrackingModule.csproj",
+      "msbuildProject": "../EyeTrackingModule/EyeTrackingModule.csproj"
     },
     "HapticsModule/1.0.0": {
       "type": "project",
@@ -86,11 +115,17 @@
       "type": "project",
       "path": "../SharpOSC/SharpOSC.csproj",
       "msbuildProject": "../SharpOSC/SharpOSC.csproj"
+    },
+    "VarjoNative/1.0.0": {
+      "type": "project",
+      "path": "../VarjoNative/VarjoNative.csproj",
+      "msbuildProject": "../VarjoNative/VarjoNative.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
       "AvatarController.Infrastructure >= 1.0.0",
+      "EyeTrackingModule >= 1.0.0",
       "HapticsModule >= 1.0.0",
       "OSCModule >= 1.0.0"
     ]
@@ -124,6 +159,9 @@
           "projectReferences": {
             "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\AvatarControllerCore\\AvatarController.Infrastructure.csproj": {
               "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\AvatarControllerCore\\AvatarController.Infrastructure.csproj"
+            },
+            "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\EyeTrackingModule\\EyeTrackingModule.csproj": {
+              "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\EyeTrackingModule\\EyeTrackingModule.csproj"
             },
             "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj": {
               "projectPath": "C:\\Users\\Austin-PC\\source\\repos\\vrc-avatar-osc-toolkit\\AvatarController\\HapticsModule\\HapticsModule.csproj"

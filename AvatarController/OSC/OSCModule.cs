@@ -1,25 +1,25 @@
 ﻿namespace OSCModule
 {
     using AvatarController.Infrastructure.Interfaces;
-    using OSCModule.Interfaces;
+    using global::OSCModule.Interfaces;
+    using AvatarController.Infrastructure;
 
     /// <summary>
     /// External Dependencies - 
     ///     SharpOSC  
     /// </summary>
-    public class OSCModuleBase : IModule
+    public class OSCModule : ModuleBase
     {
-        private bool _isInitialized = false;
         private readonly IOSCNetwork _network;
         private readonly IMessageDistributor _messageDistributor;   
 
-        public OSCModuleBase(IMessageDistributor messageDistributor)
+        public OSCModule(IMessageDistributor messageDistributor)
         {
             _network = new SharpOSCNetwork();
             _messageDistributor = messageDistributor;   
         }
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             if (_isInitialized)
             {
@@ -43,7 +43,7 @@
             return _isInitialized;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _network.Dispose();
         }
