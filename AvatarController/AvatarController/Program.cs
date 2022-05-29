@@ -115,6 +115,8 @@
             _hapticsModule.Dispose();
             _eyeTrackingModule.Dispose();
             _OSCNetworkModule.Dispose();
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
         }
     }
 }
