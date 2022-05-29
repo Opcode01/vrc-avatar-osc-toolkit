@@ -2,6 +2,7 @@
 {
     using AvatarController.Infrastructure;
     using AvatarController.Infrastructure.Interfaces;
+    using HapticsModule.Interfaces;
     using Valve.VR;
 
     /// <summary>

@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// Namespace OSC - A wrapper library to provide interoperability across various OSC communication implementations
 /// </summary>
-namespace OSCModule
+namespace OSCModule.Interfaces
 {
     using AvatarController.Infrastructure.Interfaces;
 

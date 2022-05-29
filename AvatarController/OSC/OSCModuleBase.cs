@@ -1,6 +1,7 @@
 ﻿namespace OSCModule
 {
     using AvatarController.Infrastructure.Interfaces;
+    using OSCModule.Interfaces;
 
     /// <summary>
     /// External Dependencies - 

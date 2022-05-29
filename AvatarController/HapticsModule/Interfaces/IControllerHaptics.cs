@@ -1,4 +1,4 @@
-﻿namespace HapticsModule
+﻿namespace HapticsModule.Interfaces
 {
     public interface IControllerHaptics
     {
