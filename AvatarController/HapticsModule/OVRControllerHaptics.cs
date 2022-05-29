@@ -14,7 +14,7 @@
 
         public bool Initialize(ControllerType controllerType)
         {
-            Console.WriteLine($"{this.GetType().Name} - Initializing for {controllerType}...");      //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Initializing for {controllerType}...");      //TODO: Better logging
 
             try
             {
@@ -29,11 +29,11 @@
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error with {this.GetType().Name} initialization - {e.Message}, \n {e.StackTrace}");      //TODO: Better logging
+                Console.WriteLine($"{this.GetType().Name} -- Error with initialization - {e.Message}, \n {e.StackTrace}");      //TODO: Better logging
                 _isInitialized = false;  
             }
 
-            Console.WriteLine($"{this.GetType().Name} - Init result: {_isInitialized}");    //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Init result: {_isInitialized}");    //TODO: Better logging
             return _isInitialized;
         }
 

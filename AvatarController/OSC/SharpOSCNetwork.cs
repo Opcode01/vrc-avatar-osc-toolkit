@@ -31,7 +31,7 @@
 
         public bool Initialize()
         {
-            Console.WriteLine($"{this.GetType().Name} - Initializing...");      //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Initializing...");      //TODO: Better logging
             try
             {
                 _udpSender = new SharpOSC.UDPSender(HOST, SEND_PORT);
@@ -39,11 +39,11 @@
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Error with {this.GetType().Name} initialization - {ex.Message}, \n {ex.StackTrace}"); //TODO: Better logging
+                Console.WriteLine($"{this.GetType().Name} -- Error with initialization {ex.Message}, \n {ex.StackTrace}"); //TODO: Better logging
             }
 
             _isInitialized = (_udpListener != null && _udpSender != null);
-            Console.WriteLine($"{this.GetType().Name} - Init result: {_isInitialized}"); //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Init result: {_isInitialized}"); //TODO: Better logging
             return _isInitialized;
         }
 

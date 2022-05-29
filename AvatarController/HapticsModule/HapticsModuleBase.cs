@@ -34,7 +34,7 @@
                 return false;
             }
 
-            Console.WriteLine($"{this.GetType().Name} - Initializing...");      //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Initializing...");      //TODO: Better logging
             EVRInitError error = EVRInitError.Unknown;
             try
             {
@@ -58,11 +58,11 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error with {this.GetType().Name} initialization - {ex.Message}, \n{ex.StackTrace}");      //TODO: Better logging
+                Console.WriteLine($"{this.GetType().Name} -- Error with initialization - {ex.Message}, \n{ex.StackTrace}");      //TODO: Better logging
                 _isInitialized = false;
             }
 
-            Console.WriteLine($"{this.GetType().Name} - Init result: {_isInitialized}, OVRError: {error}");    //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Init result: {_isInitialized}, OVRError: {error}");    //TODO: Better logging
             return _isInitialized;
         }
 
@@ -81,7 +81,7 @@
                     //Do nothing
                     break;
             }
-            Console.WriteLine($"Triggered {controllerType} \t Proximity value: {proximity} \t Normalized Intensity: {intensity}");
+            Console.WriteLine($"{this.GetType().Name} -- Triggered {controllerType} \t Proximity value: {proximity} \t Normalized Intensity: {intensity}");
         }
 
         public void Dispose()

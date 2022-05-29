@@ -17,6 +17,7 @@
         {
             if(network != null)
             {
+                Console.WriteLine($"{this.GetType().Name} -- Adding Network provider {network.GetType().Name}");
                 _networks.Add(network);
                 network.MessageReceived += OnMessageReceived;
             }
@@ -24,17 +25,18 @@
 
         public void AddBinding(string address, EventHandler<MsgReceivedEventArgs> eventHandler)
         {
+            Console.WriteLine($"{this.GetType().Name} -- Creating binding for {address}");
             _bindings.Add(address, eventHandler);
         }
 
         private void OnMessageReceived(object? sender, MsgReceivedEventArgs eventArgs)
         {
-            Console.WriteLine($"{this.GetType().Name} -- Received message From: \t {sender?.GetType().Name} \t Address: {eventArgs.Address} \t Data: {eventArgs.Contents}"); //TODO: Better logging
+            //DEBUG: Console.WriteLine($"{this.GetType().Name} -- Received message From: \t {sender?.GetType().Name} \t Address: {eventArgs.Address}"); //TODO: Better logging
             foreach (var binding in _bindings)
             {
                 if(eventArgs.Address == binding.Key)
                 {
-                    Console.WriteLine($"Found binding for {eventArgs.Address}!");
+                    //DEBUG: Console.WriteLine($"Found binding for {eventArgs.Address}!");
                     binding.Value?.Invoke(this, eventArgs);
                 }
             }
