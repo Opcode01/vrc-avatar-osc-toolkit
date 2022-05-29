@@ -8,8 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AvatarControllerCore\AvatarController.Infrastructure.csproj" />
+    <ProjectReference Include="..\EyeTrackingModule\EyeTrackingModule.csproj" />
     <ProjectReference Include="..\HapticsModule\HapticsModule.csproj" />
-    <ProjectReference Include="..\OSC\OSC.csproj" />
+    <ProjectReference Include="..\OSC\OSCModule.csproj" />
   </ItemGroup>
 
 </Project>

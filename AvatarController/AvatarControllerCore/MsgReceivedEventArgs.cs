@@ -1,18 +1,17 @@
-﻿
-namespace OSC
+﻿namespace AvatarController.Infrastructure
 {
-    public class OSCMsgReceivedEventArgs : EventArgs
+    public class MsgReceivedEventArgs : EventArgs
     {
         public string Address;
         public List<object> Contents;
 
-        public OSCMsgReceivedEventArgs(string address, List<object> objects)
+        public MsgReceivedEventArgs(string address, List<object> objects)
         {
             Address = address;
             Contents = objects;
         }
 
-        public OSCMsgReceivedEventArgs(string address, object[] objects)
+        public MsgReceivedEventArgs(string address, object[] objects)
         {
             Address = address;
             Contents = new List<object>(objects);

@@ -1,5 +1,6 @@
 ﻿namespace HapticsModule
 {
+    using global::HapticsModule.Interfaces;
     using Valve.VR;
 
     public class OVRControllerHaptics : IControllerHaptics
@@ -14,16 +15,10 @@
 
         public bool Initialize(ControllerType controllerType)
         {
-            Console.WriteLine($"{this.GetType().Name} - Initializing...");      //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Initializing for {controllerType}...");      //TODO: Better logging
 
-            EVRInitError error = EVRInitError.Unknown;
             try
             {
-                //Initialize OVR
-                OpenVR.Init(ref error, EVRApplicationType.VRApplication_Background);
-                if (error != EVRInitError.None)
-                    throw new Exception($"OVR Initialization failed with error: {error}");
-
                 //Initialize controller
                 _controllerIndex = controllerType == ControllerType.LEFTHAND ?
                     OpenVR.System.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand) :
@@ -31,15 +26,15 @@
                 if (_controllerIndex == OpenVR.k_unTrackedDeviceIndexInvalid)
                     throw new Exception($"No controller found for controller type {controllerType}");
 
-                _isInitialized = (error == EVRInitError.None);
+                _isInitialized = true;
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error with {this.GetType().Name} initialization - \n{e.Message}");      //TODO: Better logging
+                Console.WriteLine($"{this.GetType().Name} -- Error with initialization - {e.Message}, \n {e.StackTrace}");      //TODO: Better logging
                 _isInitialized = false;  
             }
 
-            Console.WriteLine($"{this.GetType().Name} - Init result: {_isInitialized}, OVRError: {error}");    //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Init result: {_isInitialized}");    //TODO: Better logging
             return _isInitialized;
         }
 
@@ -54,16 +49,5 @@
                 Console.WriteLine($"Error - {this.GetType().Name} has not been initialized!");
             }
         }
-
-        public void Dispose()
-        {
-            OpenVR.Shutdown();
-        }
-    }
-
-    public enum ControllerType
-    {
-        LEFTHAND = 0,
-        RIGHTHAND = 1
     }
 }

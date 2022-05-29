@@ -7,11 +7,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvatarController", "AvatarC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOSC", "SharpOSC\SharpOSC.csproj", "{9B922B0B-5595-4E05-8270-F63FAAA6C299}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSC", "OSC\OSC.csproj", "{196CC366-C33B-49E8-B309-4C9A50F7562E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSCModule", "OSC\OSCModule.csproj", "{196CC366-C33B-49E8-B309-4C9A50F7562E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OVR", "OVR\OVR.csproj", "{E8D0F504-BF07-4D8C-B0B5-2AF87B477C9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OVR", "OVR\OVR.csproj", "{E8D0F504-BF07-4D8C-B0B5-2AF87B477C9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HapticsModule", "HapticsModule\HapticsModule.csproj", "{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HapticsModule", "HapticsModule\HapticsModule.csproj", "{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvatarController.Infrastructure", "AvatarControllerCore\AvatarController.Infrastructure.csproj", "{3EE8EDBB-BEB8-4CEB-804C-262A6C34EEDB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VarjoNative", "VarjoNative\VarjoNative.csproj", "{EC0EF1B3-6172-4C51-A45C-97EDFEE2B677}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalApis", "ExternalApis", "{9F68DCF8-FBDF-4338-B5D0-FB5E2C7D6C9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EyeTrackingModule", "EyeTrackingModule\EyeTrackingModule.csproj", "{F5857719-E5E9-42DB-801F-E0C149569726}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +47,26 @@ Global
 		{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E3EEBB7-4912-4DF9-9D19-8100897D8E09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EE8EDBB-BEB8-4CEB-804C-262A6C34EEDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EE8EDBB-BEB8-4CEB-804C-262A6C34EEDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EE8EDBB-BEB8-4CEB-804C-262A6C34EEDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EE8EDBB-BEB8-4CEB-804C-262A6C34EEDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC0EF1B3-6172-4C51-A45C-97EDFEE2B677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC0EF1B3-6172-4C51-A45C-97EDFEE2B677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC0EF1B3-6172-4C51-A45C-97EDFEE2B677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC0EF1B3-6172-4C51-A45C-97EDFEE2B677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5857719-E5E9-42DB-801F-E0C149569726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5857719-E5E9-42DB-801F-E0C149569726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5857719-E5E9-42DB-801F-E0C149569726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5857719-E5E9-42DB-801F-E0C149569726}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9B922B0B-5595-4E05-8270-F63FAAA6C299} = {9F68DCF8-FBDF-4338-B5D0-FB5E2C7D6C9F}
+		{E8D0F504-BF07-4D8C-B0B5-2AF87B477C9E} = {9F68DCF8-FBDF-4338-B5D0-FB5E2C7D6C9F}
+		{EC0EF1B3-6172-4C51-A45C-97EDFEE2B677} = {9F68DCF8-FBDF-4338-B5D0-FB5E2C7D6C9F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B82255F6-0A5F-490D-A23D-CFABAFA51261}
