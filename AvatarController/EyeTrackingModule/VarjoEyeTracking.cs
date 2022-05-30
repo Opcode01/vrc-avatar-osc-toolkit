@@ -208,11 +208,11 @@
             string address = "";
             if (eye == Eye.LEFT)
             {
-                address = "/avatar/parameters/LeftEyeBlink";
+                address = "/avatar/parameters/LeftEyeLid";
             }
             else
             {
-                address = "/avatar/parameters/RightEyeBlink";
+                address = "/avatar/parameters/RightEyeLid";
             }
 
             if (isClosing)
