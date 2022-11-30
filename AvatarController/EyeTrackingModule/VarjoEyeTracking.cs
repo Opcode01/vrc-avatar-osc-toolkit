@@ -10,6 +10,7 @@
         private IntPtr _session;
         private ICollection<INetwork> _networks;
         private bool _isInitialized = false;
+        private bool _useEyesY = false;         //TODO: Set this value with a config file that should be tailored to the avatar being worn
         private bool _LeftPreviousStatus;
         private bool _RightPreviousStatus;
         private float MAX_LEFTX = 0.0f;
@@ -81,6 +82,7 @@
             float rightEyeY = 0.0f;
             float leftEyeX = 0.0f;
             float leftEyeY = 0.0f;
+            float eyesY = 0.0f;
 
             bool leftEyeState = await leftEyeTask.ConfigureAwait(false);            
             bool rightEyeState = await rightEyeTask.ConfigureAwait(false);
@@ -95,6 +97,7 @@
                 rightEyeY = (float)combinedRay.forward.y;
                 leftEyeX = (float)combinedRay.forward.x;
                 leftEyeY = (float)combinedRay.forward.y;
+                eyesY = (float)combinedRay.forward.y;
             }
             else
             {
@@ -136,10 +139,21 @@
             {
                 if (network != null)
                 {
+                    if (_useEyesY)
+                    {
+                        //For use if the avatar uses the EyesY parameter instead of independent eye tracking
+                        //https://github.com/benaclejames/VRCFaceTracking/wiki/Eye-Tracking-Setup
+                        network.SendMessage("/avatar/parameters/EyesY", eyesY);
+                    }
+                    else
+                    {
+                        //Track eyes independently
+                        network.SendMessage("/avatar/parameters/RightEyeY", rightEyeY);
+                        network.SendMessage("/avatar/parameters/LeftEyeY", leftEyeY);
+                    }
+
                     network.SendMessage("/avatar/parameters/RightEyeX", rightEyeX);
-                    network.SendMessage("/avatar/parameters/RightEyeY", rightEyeY);
                     network.SendMessage("/avatar/parameters/LeftEyeX", leftEyeX);
-                    network.SendMessage("/avatar/parameters/LeftEyeY", leftEyeY);
                 }
             }
         }
@@ -218,9 +232,9 @@
             if (isClosing)
             {
                 //Close the eye
-                for (int i = 0; i < 100; i++)
+                for (int i = 100; i > 0; i--)
                 {
-                    if(token.IsCancellationRequested)
+                    if (token.IsCancellationRequested)
                         break;
 
                     //Create a double value between 0 and 1
@@ -232,11 +246,12 @@
                     //Wait before sending next message
                     //Thread.Sleep(1);
                 }
+                
             }
             else
             {
                 //Open the eye
-                for (int i = 100; i > 0; i--)
+                for (int i = 0; i < 100; i++)
                 {
                     if (token.IsCancellationRequested)
                         break;

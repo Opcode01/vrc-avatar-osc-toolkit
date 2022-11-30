@@ -62,7 +62,7 @@
                         //Run the synchronous updates for each module
                         _OSCNetworkModule.Update();
                         _hapticsModule.Update();
-                        _eyeTrackingModule.Update();
+                        //_eyeTrackingModule.Update();
 
                         //Await all tasks to complete
                         await Task.WhenAll(_tasks);
