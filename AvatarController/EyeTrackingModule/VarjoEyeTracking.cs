@@ -10,7 +10,6 @@
         private IntPtr _session;
         private ICollection<INetwork> _networks;
         private bool _isInitialized = false;
-        private bool _useEyesY = false;         //TODO: Set this value with a config file that should be tailored to the avatar being worn
         private bool _LeftPreviousStatus;
         private bool _RightPreviousStatus;
         private float MAX_LEFTX = 0.0f;
@@ -139,19 +138,13 @@
             {
                 if (network != null)
                 {
-                    if (_useEyesY)
-                    {
-                        //For use if the avatar uses the EyesY parameter instead of independent eye tracking
-                        //https://github.com/benaclejames/VRCFaceTracking/wiki/Eye-Tracking-Setup
-                        network.SendMessage("/avatar/parameters/EyesY", eyesY);
-                    }
-                    else
-                    {
-                        //Track eyes independently
-                        network.SendMessage("/avatar/parameters/RightEyeY", rightEyeY);
-                        network.SendMessage("/avatar/parameters/LeftEyeY", leftEyeY);
-                    }
+                    //For use if the avatar uses the EyesY parameter instead of independent eye tracking
+                    //https://github.com/benaclejames/VRCFaceTracking/wiki/Eye-Tracking-Setup
+                    network.SendMessage("/avatar/parameters/EyesY", eyesY);
 
+                    //Tracking eyes independently
+                    network.SendMessage("/avatar/parameters/RightEyeY", rightEyeY);
+                    network.SendMessage("/avatar/parameters/LeftEyeY", leftEyeY);                    
                     network.SendMessage("/avatar/parameters/RightEyeX", rightEyeX);
                     network.SendMessage("/avatar/parameters/LeftEyeX", leftEyeX);
                 }
@@ -222,11 +215,11 @@
             string address = "";
             if (eye == Eye.LEFT)
             {
-                address = "/avatar/parameters/LeftEyeLid";
+                address = "/avatar/parameters/LeftEyeLidExpanded";
             }
             else
             {
-                address = "/avatar/parameters/RightEyeLid";
+                address = "/avatar/parameters/RightEyeLidExpanded";
             }
 
             if (isClosing)
