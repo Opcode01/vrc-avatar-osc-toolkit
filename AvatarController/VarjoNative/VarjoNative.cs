@@ -40,20 +40,35 @@ namespace VarjoNative
     [StructLayout(LayoutKind.Sequential)]
     public struct GazeData
     {
-        public GazeRay leftEye;                 //!< Left eye gaze ray.
-        public GazeRay rightEye;                //!< Right eye gaze ray.
-        public GazeRay gaze;                    //!< Normalized gaze direction ray.
-        public double focusDistance;            //!< Estimated gaze direction focus point distance.
-        public double stability;                //!< Focus point stability.
-        public long captureTime;                //!< Varjo time when this data was captured, see varjo_GetCurrentTime()
-        public GazeEyeStatus leftStatus;        //!< Status of left eye data.
-        public GazeEyeStatus rightStatus;       //!< Status of right eye data.
-        public GazeStatus status;               //!< Tracking main status.
-        public long frameNumber;                //!< Frame number, increases monotonically.
-        public double leftPupilSize;            //!< Normalized [0..1] left eye pupil size.
-        public double rightPupilSize;           //!< Normalized [0..1] right eye pupil size.
+        public GazeRay leftEye;                     //!< Left eye gaze ray.
+        public GazeRay rightEye;                    //!< Right eye gaze ray.
+        public GazeRay gaze;                        //!< Normalized gaze direction ray.
+        public double focusDistance;                //!< Estimated gaze direction focus point distance.
+        public double stability;                    //!< Focus point stability.
+        public long captureTime;                    //!< Varjo time when this data was captured, see varjo_GetCurrentTime()
+        public GazeEyeStatus leftStatus;            //!< Status of left eye data.
+        public GazeEyeStatus rightStatus;           //!< Status of right eye data.
+        public GazeStatus status;                   //!< Tracking main status.
+        public long frameNumber;                    //!< Frame number, increases monotonically.
+        [Obsolete] public double leftPupilSize;     //!< [Deprecated] Normalized [0..1] left eye pupil size.
+        [Obsolete] public double rightPupilSize;    //!< [Deprecated] Normalized [0..1] right eye pupil size.
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct EyeMeasurements
+    {
+        public long frameNumber;                    //!< Frame number, increases monotonically.
+        public long captureTime;                    //!< Varjo time when this data was captured, see varjo_GetCurrentTime()
+        public float interPupillaryDistanceInMM;    //!< Estimated IPD in millimeters
+        public float leftPupilIrisDiameterRatio;    //!< Ratio between left pupil and left iris.
+        public float rightPupilIrisDiameterRatio;   //!< Ratio between right pupil and right iris.
+        public float leftPupilDiameterInMM;         //!< Left pupil diameter in mm
+        public float rightPupilDiameterInMM;        //!< Right pupil diameter in mm
+        public float leftIrisDiameterInMM;          //!< Left iris diameter in mm
+        public float rightIrisDiameterInMM;         //!< Right iris diameter in mm
+        public float leftEyeOpenness;               //!< Left Eye Openness
+        public float rightEyeOpenness;              //!< Right Eye Openness
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct GazeCalibrationParameter
@@ -135,6 +150,9 @@ namespace VarjoNative
 
         [DllImport("VarjoLib", CharSet = CharSet.Auto)]
         public static extern GazeData varjo_GetGaze(IntPtr session);
+        
+        [DllImport("VarjoLib", CharSet = CharSet.Auto)]
+        public static extern bool varjo_GetGazeData(IntPtr session, out GazeData gaze, out EyeMeasurements eyeMeasurements);
 
         [DllImport("VarjoLib", CharSet = CharSet.Auto)]
         public static extern void varjo_RequestGazeCalibration(IntPtr session);

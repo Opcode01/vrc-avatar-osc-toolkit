@@ -4,6 +4,7 @@
     using AvatarController.Infrastructure;
     using AvatarController.Infrastructure.Interfaces;
     using global::EyeTrackingModule.Interfaces;
+    using System.Net;
 
     internal class VarjoEyeTracking : IEyeTracking
     {
@@ -12,14 +13,12 @@
         private bool _isInitialized = false;
         private bool _LeftPreviousStatus;
         private bool _RightPreviousStatus;
-        private float MAX_LEFTX = 0.0f;
-        private float MIN_LEFTX = 0.0f;
-        private float MAX_LEFTY = 0.0f;
-        private float MIN_LEFTY = 0.0f;
-        private float MAX_RIGHTX = 0.0f;
-        private float MIN_RIGHTX = 0.0f;
-        private float MAX_RIGHTY = 0.0f;
-        private float MIN_RIGHTY = 0.0f;
+
+        // 999 for min and -999 for max, to ensure these Values get overwritten the first runthrough
+        private double _min_left_x = 0.0000, _min_left_y = 0.0000, _min_right_x = 0.0000, _min_right_y = 0.0000;
+        private double _max_left_x = 0.0000, _max_left_y = 0.0000, _max_right_x = 0.0000, _max_right_y = 0.0000;
+        private double _min_pupil_size = 1.0000f, _max_pupil_size = -1.0000f;
+        private double _min_left_eye_open = 10.0000, _min_right_eye_open = 10.0000, _max_left_eye_open = -999.0000, _max_right_eye_open = -999.0000;
 
         public VarjoEyeTracking(ICollection<INetwork> networks)
         {
@@ -69,77 +68,122 @@
             if (token.IsCancellationRequested)
                 return;
 
-            var gazeData = VarjoNative.varjo_GetGaze(_session);
+            GazeData gazeData;
+            EyeMeasurements eyeMeasurements;
+            bool success = VarjoNative.varjo_GetGazeData(_session, out gazeData, out eyeMeasurements);
 
-            //Do left eye processing
-            Task<bool> leftEyeTask = ProcessEyeStatus(gazeData.leftStatus, _LeftPreviousStatus, Eye.LEFT, token);
+            //Skip this update if the gaze data isn't good
+            if (!success || gazeData.status != GazeStatus.Valid)
+                return;
 
-            //Do right eye processing
-            Task<bool> rightEyeTask = ProcessEyeStatus(gazeData.rightStatus, _RightPreviousStatus, Eye.RIGHT, token);
+            double rightEyeX = 0.0000;
+            double rightEyeY = 0.0000;
+            double leftEyeX = 0.0000;
+            double leftEyeY = 0.0000;
+            double eyesY = 0.0000;
+            double pupilSize = 0.0000;
+            double eyeDilation = 0.0000;
+            double leftEyeOpenness = eyeMeasurements.leftEyeOpenness;
+            double rightEyeOpenness = eyeMeasurements.rightEyeOpenness;
 
-            float rightEyeX = 0.0f;
-            float rightEyeY = 0.0f;
-            float leftEyeX = 0.0f;
-            float leftEyeY = 0.0f;
-
-            bool leftEyeState = await leftEyeTask.ConfigureAwait(false);            
-            bool rightEyeState = await rightEyeTask.ConfigureAwait(false);
-            _LeftPreviousStatus = leftEyeState;
-            _RightPreviousStatus = rightEyeState;   
+            bool leftEyeState = (gazeData.leftStatus != GazeEyeStatus.Invalid);
+            bool rightEyeState = (gazeData.rightStatus != GazeEyeStatus.Invalid);
 
             if (leftEyeState && rightEyeState)
             {
                 //Both eyes good - use combined gaze
                 var combinedRay = gazeData.gaze;
-                rightEyeX = (float)combinedRay.forward.x;
-                rightEyeY = (float)combinedRay.forward.y;
-                leftEyeX = (float)combinedRay.forward.x;
-                leftEyeY = (float)combinedRay.forward.y;
+                rightEyeX = combinedRay.forward.x;
+                rightEyeY = combinedRay.forward.y;
+                leftEyeX = combinedRay.forward.x;
+                leftEyeY = combinedRay.forward.y;
+                eyesY = combinedRay.forward.y;
+
+                //Process pupil size
+                pupilSize = (eyeMeasurements.leftPupilDiameterInMM + eyeMeasurements.rightPupilDiameterInMM) / 2;
             }
             else
             {
                 //Use independent gaze
-                var rightEye = gazeData.rightEye;
-                rightEyeX = (float)rightEye.forward.x;
-                rightEyeY = (float)rightEye.forward.y;
-
-                var leftEye = gazeData.leftEye;
-                leftEyeY = (float)leftEye.forward.y;
-                leftEyeX = (float)leftEye.forward.x;
+                if (rightEyeState)
+                {
+                    var rightEye = gazeData.rightEye;
+                    rightEyeX = rightEye.forward.x;
+                    rightEyeY = rightEye.forward.y;
+                    pupilSize = eyeMeasurements.rightPupilDiameterInMM;
+                }
+                if (leftEyeState)
+                {
+                    var leftEye = gazeData.leftEye;
+                    leftEyeY = leftEye.forward.y;
+                    leftEyeX = leftEye.forward.x;
+                    pupilSize = eyeMeasurements.leftPupilDiameterInMM;
+                }
             }
 
-            if (rightEyeX > MAX_RIGHTX)
-                MAX_RIGHTX = rightEyeX;
-            if (rightEyeX < MIN_RIGHTX)
-                MIN_RIGHTX = rightEyeX;
-            if (rightEyeY > MAX_RIGHTY)
-                MAX_RIGHTY = rightEyeY;
-            if (rightEyeY < MIN_RIGHTY)
-                MIN_RIGHTY = rightEyeY;
+            //Set Min/Maxs
+            if (rightEyeX > _max_right_x)
+                _max_right_x = rightEyeX;
+            if (rightEyeX < _min_right_x)
+                _min_right_x = rightEyeX;
+            if (rightEyeY > _max_right_y)
+                _max_right_y = rightEyeY;
+            if (rightEyeY < _min_right_y)
+                _min_right_y = rightEyeY;
 
-            if (leftEyeX > MAX_LEFTX)
-                MAX_LEFTX = leftEyeX;
-            if (leftEyeX < MIN_LEFTX)
-                MIN_LEFTX = leftEyeX;
-            if (leftEyeY > MAX_LEFTY)
-                MAX_LEFTY = leftEyeY;
-            if (leftEyeY < MIN_LEFTY)
-                MIN_LEFTY = leftEyeY;
+            if (leftEyeX > _max_left_x)
+                _max_left_x = leftEyeX;
+            if (leftEyeX < _min_left_x)
+                _min_left_x = leftEyeX;
+            if (leftEyeY > _max_left_y)
+                _max_left_y = leftEyeY;
+            if (leftEyeY < _min_left_y)
+                _min_left_y = leftEyeY;
+
+            if(pupilSize > _max_pupil_size)
+                _max_pupil_size = pupilSize;
+            if (pupilSize < _min_pupil_size)
+                _min_pupil_size = pupilSize;
+
+            if(leftEyeOpenness > _max_left_eye_open)
+                _max_left_eye_open = leftEyeOpenness;
+            if (leftEyeOpenness < _min_left_eye_open)
+                _min_left_eye_open = leftEyeOpenness;
+            if(rightEyeOpenness > _max_right_eye_open)
+                _max_right_eye_open = rightEyeOpenness;
+            if (rightEyeOpenness < _min_right_eye_open)
+                _min_right_eye_open = rightEyeOpenness;
 
             //Normalize between -1 and 1
-            rightEyeX = Math.Normalize(rightEyeX, MAX_RIGHTX, MIN_RIGHTX);
-            rightEyeY = Math.Normalize(rightEyeY, MAX_RIGHTY, MIN_RIGHTY);
-            leftEyeX =  Math.Normalize(leftEyeX,  MAX_LEFTX,  MIN_LEFTX);
-            leftEyeY =  Math.Normalize(leftEyeY,  MAX_LEFTY,  MIN_LEFTY);
+            rightEyeX = Math.Normalize(rightEyeX, _max_right_x, _min_right_x);
+            rightEyeY = Math.Normalize(rightEyeY, _max_right_y, _min_right_y);
+            leftEyeX =  Math.Normalize(leftEyeX,  _max_left_x,  _min_left_x);
+            leftEyeY =  Math.Normalize(leftEyeY,  _max_left_y,  _min_left_y);
+            eyeDilation = Math.Normalize(pupilSize, _max_pupil_size, _min_pupil_size, 1.0f, 0.0f);
+            leftEyeOpenness = Math.Normalize(leftEyeOpenness, _max_left_eye_open, _min_left_eye_open, 1.0000, 0.0000);
+            rightEyeOpenness = Math.Normalize(rightEyeOpenness, _max_right_eye_open, _min_right_eye_open, 1.0000, 0.0000);
 
             foreach (var network in _networks)
             {
                 if (network != null)
                 {
-                    network.SendMessage("/avatar/parameters/RightEyeX", rightEyeX);
-                    network.SendMessage("/avatar/parameters/RightEyeY", rightEyeY);
-                    network.SendMessage("/avatar/parameters/LeftEyeX", leftEyeX);
-                    network.SendMessage("/avatar/parameters/LeftEyeY", leftEyeY);
+                    //For use if the avatar uses the EyesY parameter instead of independent eye tracking
+                    //https://github.com/benaclejames/VRCFaceTracking/wiki/Eye-Tracking-Setup
+                    network.SendMessage("/avatar/parameters/EyesY", (float)eyesY);
+
+                    //Tracking eyes independently
+                    network.SendMessage("/avatar/parameters/RightEyeY", (float)rightEyeY);
+                    network.SendMessage("/avatar/parameters/LeftEyeY", (float)leftEyeY);                    
+                    network.SendMessage("/avatar/parameters/RightEyeX", (float)rightEyeX);
+                    network.SendMessage("/avatar/parameters/LeftEyeX", (float)leftEyeX);
+
+                    //Tracking pupil diameter and size
+                    network.SendMessage("/avatar/parameters/EyesPupilDiameter", (pupilSize > 10.0f || pupilSize == 0.0f) ? 1 : (float)pupilSize / 10.0f); //NOTE: PupilDiameter for VRCFT is in CM not MM
+                    network.SendMessage("/avatar/parameters/EyesDilation", (float)eyeDilation);
+                    
+                    //Tracking eye lids
+                    network.SendMessage("/avatar/parameters/LeftEyeLidExpanded", (float)leftEyeOpenness);
+                    network.SendMessage("/avatar/parameters/RightEyeLidExpanded", (float)rightEyeOpenness);
                 }
             }
         }
@@ -181,6 +225,7 @@
             VarjoNative.varjo_SessionShutDown(_session);
         }
 
+        [Obsolete]
         private async Task<bool> ProcessEyeStatus(GazeEyeStatus gazeStatus, bool prevStatus, Eye eye, CancellationToken token = default)
         {
             bool shouldClose = false;
@@ -202,25 +247,26 @@
             return gazeStatusGood;
         }
 
+        [Obsolete]
         private void DoBlink(bool isClosing, Eye eye, CancellationToken token = default)
         {
             //Blink control
             string address = "";
             if (eye == Eye.LEFT)
             {
-                address = "/avatar/parameters/LeftEyeLid";
+                address = "/avatar/parameters/LeftEyeLidExpanded";
             }
             else
             {
-                address = "/avatar/parameters/RightEyeLid";
+                address = "/avatar/parameters/RightEyeLidExpanded";
             }
 
             if (isClosing)
             {
                 //Close the eye
-                for (int i = 0; i < 100; i++)
+                for (int i = 100; i > 0; i--)
                 {
-                    if(token.IsCancellationRequested)
+                    if (token.IsCancellationRequested)
                         break;
 
                     //Create a double value between 0 and 1
@@ -232,11 +278,12 @@
                     //Wait before sending next message
                     //Thread.Sleep(1);
                 }
+                
             }
             else
             {
                 //Open the eye
-                for (int i = 100; i > 0; i--)
+                for (int i = 0; i < 100; i++)
                 {
                     if (token.IsCancellationRequested)
                         break;
