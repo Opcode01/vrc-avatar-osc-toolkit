@@ -15,9 +15,10 @@
         private bool _RightPreviousStatus;
 
         // 999 for min and -999 for max, to ensure these Values get overwritten the first runthrough
-        private float _min_left_x = 999.0f, _min_left_y = 999.0f, _min_right_x = 999.0f, _min_right_y = 999.0f;
-        private float _max_left_x = -999.0f, _max_left_y = -999.0f, _max_right_x = -999.0f, _max_right_y = -999.0f;
-        private float _min_pupil_size = 999.0f, _max_pupil_size = -999.0f;
+        private double _min_left_x = 0.0000, _min_left_y = 0.0000, _min_right_x = 0.0000, _min_right_y = 0.0000;
+        private double _max_left_x = 0.0000, _max_left_y = 0.0000, _max_right_x = 0.0000, _max_right_y = 0.0000;
+        private double _min_pupil_size = 1.0000f, _max_pupil_size = -1.0000f;
+        private double _min_left_eye_open = 10.0000, _min_right_eye_open = 10.0000, _max_left_eye_open = -999.0000, _max_right_eye_open = -999.0000;
 
         public VarjoEyeTracking(ICollection<INetwork> networks)
         {
@@ -75,26 +76,28 @@
             if (!success || gazeData.status != GazeStatus.Valid)
                 return;
 
-            float rightEyeX = 0.0f;
-            float rightEyeY = 0.0f;
-            float leftEyeX = 0.0f;
-            float leftEyeY = 0.0f;
-            float eyesY = 0.0f;
-            float pupilSize = 0.0f;
-            float eyeDilation = 0.0f;
+            double rightEyeX = 0.0000;
+            double rightEyeY = 0.0000;
+            double leftEyeX = 0.0000;
+            double leftEyeY = 0.0000;
+            double eyesY = 0.0000;
+            double pupilSize = 0.0000;
+            double eyeDilation = 0.0000;
+            double leftEyeOpenness = eyeMeasurements.leftEyeOpenness;
+            double rightEyeOpenness = eyeMeasurements.rightEyeOpenness;
 
-            bool leftEyeState = (gazeData.leftStatus == GazeEyeStatus.Invalid);
-            bool rightEyeState = (gazeData.rightStatus == GazeEyeStatus.Invalid);
+            bool leftEyeState = (gazeData.leftStatus != GazeEyeStatus.Invalid);
+            bool rightEyeState = (gazeData.rightStatus != GazeEyeStatus.Invalid);
 
             if (leftEyeState && rightEyeState)
             {
                 //Both eyes good - use combined gaze
                 var combinedRay = gazeData.gaze;
-                rightEyeX = (float)combinedRay.forward.x;
-                rightEyeY = (float)combinedRay.forward.y;
-                leftEyeX = (float)combinedRay.forward.x;
-                leftEyeY = (float)combinedRay.forward.y;
-                eyesY = (float)combinedRay.forward.y;
+                rightEyeX = combinedRay.forward.x;
+                rightEyeY = combinedRay.forward.y;
+                leftEyeX = combinedRay.forward.x;
+                leftEyeY = combinedRay.forward.y;
+                eyesY = combinedRay.forward.y;
 
                 //Process pupil size
                 pupilSize = (eyeMeasurements.leftPupilDiameterInMM + eyeMeasurements.rightPupilDiameterInMM) / 2;
@@ -105,15 +108,15 @@
                 if (rightEyeState)
                 {
                     var rightEye = gazeData.rightEye;
-                    rightEyeX = (float)rightEye.forward.x;
-                    rightEyeY = (float)rightEye.forward.y;
+                    rightEyeX = rightEye.forward.x;
+                    rightEyeY = rightEye.forward.y;
                     pupilSize = eyeMeasurements.rightPupilDiameterInMM;
                 }
                 if (leftEyeState)
                 {
                     var leftEye = gazeData.leftEye;
-                    leftEyeY = (float)leftEye.forward.y;
-                    leftEyeX = (float)leftEye.forward.x;
+                    leftEyeY = leftEye.forward.y;
+                    leftEyeX = leftEye.forward.x;
                     pupilSize = eyeMeasurements.leftPupilDiameterInMM;
                 }
             }
@@ -142,12 +145,23 @@
             if (pupilSize < _min_pupil_size)
                 _min_pupil_size = pupilSize;
 
+            if(leftEyeOpenness > _max_left_eye_open)
+                _max_left_eye_open = leftEyeOpenness;
+            if (leftEyeOpenness < _min_left_eye_open)
+                _min_left_eye_open = leftEyeOpenness;
+            if(rightEyeOpenness > _max_right_eye_open)
+                _max_right_eye_open = rightEyeOpenness;
+            if (rightEyeOpenness < _min_right_eye_open)
+                _min_right_eye_open = rightEyeOpenness;
+
             //Normalize between -1 and 1
             rightEyeX = Math.Normalize(rightEyeX, _max_right_x, _min_right_x);
             rightEyeY = Math.Normalize(rightEyeY, _max_right_y, _min_right_y);
             leftEyeX =  Math.Normalize(leftEyeX,  _max_left_x,  _min_left_x);
             leftEyeY =  Math.Normalize(leftEyeY,  _max_left_y,  _min_left_y);
             eyeDilation = Math.Normalize(pupilSize, _max_pupil_size, _min_pupil_size, 1.0f, 0.0f);
+            leftEyeOpenness = Math.Normalize(leftEyeOpenness, _max_left_eye_open, _min_left_eye_open, 1.0000, 0.0000);
+            rightEyeOpenness = Math.Normalize(rightEyeOpenness, _max_right_eye_open, _min_right_eye_open, 1.0000, 0.0000);
 
             foreach (var network in _networks)
             {
@@ -155,21 +169,21 @@
                 {
                     //For use if the avatar uses the EyesY parameter instead of independent eye tracking
                     //https://github.com/benaclejames/VRCFaceTracking/wiki/Eye-Tracking-Setup
-                    network.SendMessage("/avatar/parameters/EyesY", eyesY);
+                    network.SendMessage("/avatar/parameters/EyesY", (float)eyesY);
 
                     //Tracking eyes independently
-                    network.SendMessage("/avatar/parameters/RightEyeY", rightEyeY);
-                    network.SendMessage("/avatar/parameters/LeftEyeY", leftEyeY);                    
-                    network.SendMessage("/avatar/parameters/RightEyeX", rightEyeX);
-                    network.SendMessage("/avatar/parameters/LeftEyeX", leftEyeX);
+                    network.SendMessage("/avatar/parameters/RightEyeY", (float)rightEyeY);
+                    network.SendMessage("/avatar/parameters/LeftEyeY", (float)leftEyeY);                    
+                    network.SendMessage("/avatar/parameters/RightEyeX", (float)rightEyeX);
+                    network.SendMessage("/avatar/parameters/LeftEyeX", (float)leftEyeX);
 
                     //Tracking pupil diameter and size
-                    network.SendMessage("/avatar/parameters/EyesPupilDiameter", (pupilSize > 10.0f || pupilSize == 0.0f) ? 1 : pupilSize / 10.0f); //NOTE: PupilDiameter for VRCFT is in CM not MM
-                    network.SendMessage("/avatar/parameters/EyesDilation", eyeDilation);
+                    network.SendMessage("/avatar/parameters/EyesPupilDiameter", (pupilSize > 10.0f || pupilSize == 0.0f) ? 1 : (float)pupilSize / 10.0f); //NOTE: PupilDiameter for VRCFT is in CM not MM
+                    network.SendMessage("/avatar/parameters/EyesDilation", (float)eyeDilation);
                     
                     //Tracking eye lids
-                    network.SendMessage("/avatar/parameters/LeftEyeLidExpanded", eyeMeasurements.leftEyeOpenness);
-                    network.SendMessage("/avatar/parameters/RightEyeLidExpanded", eyeMeasurements.rightEyeOpenness);
+                    network.SendMessage("/avatar/parameters/LeftEyeLidExpanded", (float)leftEyeOpenness);
+                    network.SendMessage("/avatar/parameters/RightEyeLidExpanded", (float)rightEyeOpenness);
                 }
             }
         }
