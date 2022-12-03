@@ -4,6 +4,7 @@
     using AvatarController.Infrastructure;
     using AvatarController.Infrastructure.Interfaces;
     using global::EyeTrackingModule.Interfaces;
+    using System.Net;
 
     internal class VarjoEyeTracking : IEyeTracking
     {
@@ -12,14 +13,11 @@
         private bool _isInitialized = false;
         private bool _LeftPreviousStatus;
         private bool _RightPreviousStatus;
-        private float MAX_LEFTX = 0.0f;
-        private float MIN_LEFTX = 0.0f;
-        private float MAX_LEFTY = 0.0f;
-        private float MIN_LEFTY = 0.0f;
-        private float MAX_RIGHTX = 0.0f;
-        private float MIN_RIGHTX = 0.0f;
-        private float MAX_RIGHTY = 0.0f;
-        private float MIN_RIGHTY = 0.0f;
+
+        // 999 for min and -999 for max, to ensure these Values get overwritten the first runthrough
+        private float _min_left_x = 999.0f, _min_left_y = 999.0f, _min_right_x = 999.0f, _min_right_y = 999.0f;
+        private float _max_left_x = -999.0f, _max_left_y = -999.0f, _max_right_x = -999.0f, _max_right_y = -999.0f;
+        private float _min_pupil_size = 999.0f, _max_pupil_size = -999.0f;
 
         public VarjoEyeTracking(ICollection<INetwork> networks)
         {
@@ -69,24 +67,24 @@
             if (token.IsCancellationRequested)
                 return;
 
-            var gazeData = VarjoNative.varjo_GetGaze(_session);
+            GazeData gazeData;
+            EyeMeasurements eyeMeasurements;
+            bool success = VarjoNative.varjo_GetGazeData(_session, out gazeData, out eyeMeasurements);
 
-            //Do left eye processing
-            Task<bool> leftEyeTask = ProcessEyeStatus(gazeData.leftStatus, _LeftPreviousStatus, Eye.LEFT, token);
-
-            //Do right eye processing
-            Task<bool> rightEyeTask = ProcessEyeStatus(gazeData.rightStatus, _RightPreviousStatus, Eye.RIGHT, token);
+            //Skip this update if the gaze data isn't good
+            if (!success || gazeData.status != GazeStatus.Valid)
+                return;
 
             float rightEyeX = 0.0f;
             float rightEyeY = 0.0f;
             float leftEyeX = 0.0f;
             float leftEyeY = 0.0f;
             float eyesY = 0.0f;
+            float pupilSize = 0.0f;
+            float eyeDilation = 0.0f;
 
-            bool leftEyeState = await leftEyeTask.ConfigureAwait(false);            
-            bool rightEyeState = await rightEyeTask.ConfigureAwait(false);
-            _LeftPreviousStatus = leftEyeState;
-            _RightPreviousStatus = rightEyeState;   
+            bool leftEyeState = (gazeData.leftStatus == GazeEyeStatus.Invalid);
+            bool rightEyeState = (gazeData.rightStatus == GazeEyeStatus.Invalid);
 
             if (leftEyeState && rightEyeState)
             {
@@ -97,42 +95,59 @@
                 leftEyeX = (float)combinedRay.forward.x;
                 leftEyeY = (float)combinedRay.forward.y;
                 eyesY = (float)combinedRay.forward.y;
+
+                //Process pupil size
+                pupilSize = (eyeMeasurements.leftPupilDiameterInMM + eyeMeasurements.rightPupilDiameterInMM) / 2;
             }
             else
             {
                 //Use independent gaze
-                var rightEye = gazeData.rightEye;
-                rightEyeX = (float)rightEye.forward.x;
-                rightEyeY = (float)rightEye.forward.y;
-
-                var leftEye = gazeData.leftEye;
-                leftEyeY = (float)leftEye.forward.y;
-                leftEyeX = (float)leftEye.forward.x;
+                if (rightEyeState)
+                {
+                    var rightEye = gazeData.rightEye;
+                    rightEyeX = (float)rightEye.forward.x;
+                    rightEyeY = (float)rightEye.forward.y;
+                    pupilSize = eyeMeasurements.rightPupilDiameterInMM;
+                }
+                if (leftEyeState)
+                {
+                    var leftEye = gazeData.leftEye;
+                    leftEyeY = (float)leftEye.forward.y;
+                    leftEyeX = (float)leftEye.forward.x;
+                    pupilSize = eyeMeasurements.leftPupilDiameterInMM;
+                }
             }
 
-            if (rightEyeX > MAX_RIGHTX)
-                MAX_RIGHTX = rightEyeX;
-            if (rightEyeX < MIN_RIGHTX)
-                MIN_RIGHTX = rightEyeX;
-            if (rightEyeY > MAX_RIGHTY)
-                MAX_RIGHTY = rightEyeY;
-            if (rightEyeY < MIN_RIGHTY)
-                MIN_RIGHTY = rightEyeY;
+            //Set Min/Maxs
+            if (rightEyeX > _max_right_x)
+                _max_right_x = rightEyeX;
+            if (rightEyeX < _min_right_x)
+                _min_right_x = rightEyeX;
+            if (rightEyeY > _max_right_y)
+                _max_right_y = rightEyeY;
+            if (rightEyeY < _min_right_y)
+                _min_right_y = rightEyeY;
 
-            if (leftEyeX > MAX_LEFTX)
-                MAX_LEFTX = leftEyeX;
-            if (leftEyeX < MIN_LEFTX)
-                MIN_LEFTX = leftEyeX;
-            if (leftEyeY > MAX_LEFTY)
-                MAX_LEFTY = leftEyeY;
-            if (leftEyeY < MIN_LEFTY)
-                MIN_LEFTY = leftEyeY;
+            if (leftEyeX > _max_left_x)
+                _max_left_x = leftEyeX;
+            if (leftEyeX < _min_left_x)
+                _min_left_x = leftEyeX;
+            if (leftEyeY > _max_left_y)
+                _max_left_y = leftEyeY;
+            if (leftEyeY < _min_left_y)
+                _min_left_y = leftEyeY;
+
+            if(pupilSize > _max_pupil_size)
+                _max_pupil_size = pupilSize;
+            if (pupilSize < _min_pupil_size)
+                _min_pupil_size = pupilSize;
 
             //Normalize between -1 and 1
-            rightEyeX = Math.Normalize(rightEyeX, MAX_RIGHTX, MIN_RIGHTX);
-            rightEyeY = Math.Normalize(rightEyeY, MAX_RIGHTY, MIN_RIGHTY);
-            leftEyeX =  Math.Normalize(leftEyeX,  MAX_LEFTX,  MIN_LEFTX);
-            leftEyeY =  Math.Normalize(leftEyeY,  MAX_LEFTY,  MIN_LEFTY);
+            rightEyeX = Math.Normalize(rightEyeX, _max_right_x, _min_right_x);
+            rightEyeY = Math.Normalize(rightEyeY, _max_right_y, _min_right_y);
+            leftEyeX =  Math.Normalize(leftEyeX,  _max_left_x,  _min_left_x);
+            leftEyeY =  Math.Normalize(leftEyeY,  _max_left_y,  _min_left_y);
+            eyeDilation = Math.Normalize(pupilSize, _max_pupil_size, _min_pupil_size, 1.0f, 0.0f);
 
             foreach (var network in _networks)
             {
@@ -147,6 +162,14 @@
                     network.SendMessage("/avatar/parameters/LeftEyeY", leftEyeY);                    
                     network.SendMessage("/avatar/parameters/RightEyeX", rightEyeX);
                     network.SendMessage("/avatar/parameters/LeftEyeX", leftEyeX);
+
+                    //Tracking pupil diameter and size
+                    network.SendMessage("/avatar/parameters/EyesPupilDiameter", (pupilSize > 10.0f || pupilSize == 0.0f) ? 1 : pupilSize / 10.0f); //NOTE: PupilDiameter for VRCFT is in CM not MM
+                    network.SendMessage("/avatar/parameters/EyesDilation", eyeDilation);
+                    
+                    //Tracking eye lids
+                    network.SendMessage("/avatar/parameters/LeftEyeLidExpanded", eyeMeasurements.leftEyeOpenness);
+                    network.SendMessage("/avatar/parameters/RightEyeLidExpanded", eyeMeasurements.rightEyeOpenness);
                 }
             }
         }
@@ -188,6 +211,7 @@
             VarjoNative.varjo_SessionShutDown(_session);
         }
 
+        [Obsolete]
         private async Task<bool> ProcessEyeStatus(GazeEyeStatus gazeStatus, bool prevStatus, Eye eye, CancellationToken token = default)
         {
             bool shouldClose = false;
@@ -209,6 +233,7 @@
             return gazeStatusGood;
         }
 
+        [Obsolete]
         private void DoBlink(bool isClosing, Eye eye, CancellationToken token = default)
         {
             //Blink control

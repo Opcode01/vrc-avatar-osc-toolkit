@@ -72,6 +72,10 @@
                     }
                 }
             }
+            else
+            {
+                Console.WriteLine("Initialization failed!");
+            }
 
             Exit();
         }
