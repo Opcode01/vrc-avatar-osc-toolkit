@@ -85,6 +85,8 @@
             double eyeDilation = 0.0000;
             double leftEyeOpenness = eyeMeasurements.leftEyeOpenness;
             double rightEyeOpenness = eyeMeasurements.rightEyeOpenness;
+            double leftEyeExpandedSqueeze = leftEyeOpenness;
+            double rightEyeExpandedSqueeze = rightEyeOpenness;
 
             bool leftEyeState = (gazeData.leftStatus != GazeEyeStatus.Invalid);
             bool rightEyeState = (gazeData.rightStatus != GazeEyeStatus.Invalid);
@@ -154,7 +156,7 @@
             if (rightEyeOpenness < _min_right_eye_open)
                 _min_right_eye_open = rightEyeOpenness;
 
-            //Normalize between -1 and 1
+            //Normalize values - default from -1.0 to 1.0
             rightEyeX = Math.Normalize(rightEyeX, _max_right_x, _min_right_x);
             rightEyeY = Math.Normalize(rightEyeY, _max_right_y, _min_right_y);
             leftEyeX =  Math.Normalize(leftEyeX,  _max_left_x,  _min_left_x);
@@ -162,6 +164,8 @@
             eyeDilation = Math.Normalize(pupilSize, _max_pupil_size, _min_pupil_size, 1.0f, 0.0f);
             leftEyeOpenness = Math.Normalize(leftEyeOpenness, _max_left_eye_open, _min_left_eye_open, 1.0000, 0.0000);
             rightEyeOpenness = Math.Normalize(rightEyeOpenness, _max_right_eye_open, _min_right_eye_open, 1.0000, 0.0000);
+            leftEyeExpandedSqueeze = Math.Normalize(leftEyeExpandedSqueeze, _max_left_eye_open, _min_left_eye_open);
+            rightEyeExpandedSqueeze = Math.Normalize(rightEyeExpandedSqueeze, _max_right_eye_open, _min_right_eye_open);
 
             foreach (var network in _networks)
             {
@@ -184,6 +188,8 @@
                     //Tracking eye lids
                     network.SendMessage("/avatar/parameters/LeftEyeLidExpanded", (float)leftEyeOpenness);
                     network.SendMessage("/avatar/parameters/RightEyeLidExpanded", (float)rightEyeOpenness);
+                    network.SendMessage("/avatar/parameters/LeftEyeLidExpandedSqueeze", (float)leftEyeExpandedSqueeze);
+                    network.SendMessage("/avatar/parameters/RightEyeLidExpandedSqueeze", (float)rightEyeExpandedSqueeze);
                 }
             }
         }
