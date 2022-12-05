@@ -15,7 +15,8 @@ Running a VR setup often involves needing to start up a lot of different applica
 Setup steps are specific to each module. In the future, each module should have its own Wiki page describing setup, parameters, and configurations. For now:
  - **EyeTrackingModule** : Follow steps at https://github.com/benaclejames/VRCFaceTracking/wiki/Eye-Tracking-Setup 
  - **HapticsModule**     : You will need to have a VRC Contact Receiver on each of your avatar's hands with the parameters "LeftHandTouch" and "RightHandTouch" respectively.
-    ![](https://git.droppedtable.tech/avickrs/vrc-avatar-osc-toolkit/vrccontactreceiver.png)
+ 
+   ![](vrccontactreceiver.PNG)
  - **OSCModule**         : Your avatar needs to have OSC enabled. Default ports are 9000 for sending and 9001 for receiving OSC messages. Default host is localhost (127.0.0.1). Make sure these ports are available, or change them in SharpOSCNetwork.cs in OSCModule. See https://docs.vrchat.com/docs/osc-overview for more information. 
 
 ## Building and Running the project
