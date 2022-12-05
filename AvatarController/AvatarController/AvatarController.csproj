@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AvatarControllerCore\AvatarController.Infrastructure.csproj" />
-    <ProjectReference Include="..\EyeTrackingModule\EyeTrackingModule.csproj" />
-    <ProjectReference Include="..\HapticsModule\HapticsModule.csproj" />
-    <ProjectReference Include="..\OSC\OSCModule.csproj" />
+    <ProjectReference Include="..\Modules\EyeTrackingModule\EyeTrackingModule.csproj" />
+    <ProjectReference Include="..\Modules\HapticsModule\HapticsModule.csproj" />
+    <ProjectReference Include="..\Modules\OSCModule\OSCModule.csproj" />
   </ItemGroup>
 
 </Project>

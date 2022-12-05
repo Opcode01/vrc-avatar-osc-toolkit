@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AvatarControllerCore\AvatarController.Infrastructure.csproj" />
-    <ProjectReference Include="..\VarjoNative\VarjoNative.csproj" />
+    <ProjectReference Include="..\..\AvatarControllerCore\AvatarController.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\ExternalLibs\OVR\OVR.csproj" />
   </ItemGroup>
 
 </Project>
