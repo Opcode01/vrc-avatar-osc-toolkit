@@ -28,7 +28,7 @@ stages:
   - deploy
 
 before_script:
-  - nuget "./AvatarController/AvatarController.sln" restore -NonInteractive
+  - nuget AvatarController.sln restore -NonInteractive
 
 build-release:
   stage: build
