@@ -8,6 +8,17 @@ stages:
 before_script:
   - apk add dotnet6-sdk
 
+build-sdk-windows:
+  stage: build
+  #rules:
+    #- if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  artifacts:
+    paths:
+      - build/release/sdk/
+  script:
+    # The output path is relative to the position of the csproj-file
+    - dotnet publish "./AvatarController/AvatarController.sln" -c "Release" -r win10-x64 -o "./build/release/" --no-self-contained
+
 build-release-windows:
   stage: build
   #rules:
@@ -16,8 +27,7 @@ build-release-windows:
     paths:
       - build/release/
   script:
-    # The output path is relative to the position of the csproj-file
-    - dotnet publish "./AvatarController/AvatarController.sln" -c "Release" -r win10-x64 -o "./build/release/" --no-self-contained
+    - dotnet publish "./AvatarController/AvatarController/AvatarController.csproj" -c "Release" -r win10-x64 -o "./build/release/" /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
 
 #test:
 # stage: test
