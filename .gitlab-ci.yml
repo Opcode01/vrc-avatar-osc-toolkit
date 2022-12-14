@@ -8,7 +8,7 @@ stages:
 before_script:
   - apk add dotnet6-sdk
 
-build-release:
+build-release-windows:
   stage: build
   #rules:
     #- if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -17,7 +17,7 @@ build-release:
       - build/release/
   script:
     # The output path is relative to the position of the csproj-file
-    - dotnet publish "./AvatarController/AvatarController.sln" -c "Release" -o "./build/release/"
+    - dotnet publish "./AvatarController/AvatarController.sln" -c "Release" -r win10-x64 -o "./build/release/"
 
 #test:
 # stage: test
