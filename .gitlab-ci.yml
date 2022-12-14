@@ -3,7 +3,7 @@ image: alpine:latest
 stages:
   - build
   #- test
-  - deploy
+  #- deploy
 
 before_script:
   - apk add dotnet6-sdk
@@ -36,7 +36,7 @@ build-release-windows:
     #  /p:OutputPath="./../../build/debug/" "MyProject.sln"
     #- mono packages/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe build/debug/MyProject.Test.dll
 
-deploy:
-  stage: deploy
-  script: echo "Define your deployment script!"
-  environment: production
+#deploy:
+ # stage: deploy
+ # script: echo "Define your deployment script!"
+ # environment: production
