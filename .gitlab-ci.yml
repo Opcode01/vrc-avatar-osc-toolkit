@@ -28,6 +28,8 @@ stages:
   - deploy
 
 before_script:
+  - wget https://dot.net/v1/dotnet-install.sh
+  - bash ./dotnet-install.sh -c 6.0
   - nuget restore "./AvatarController/AvatarController.sln" -NonInteractive
 
 build-release:
