@@ -1,0 +1,44 @@
+image: alpine:latest
+
+stages:
+  - build
+  #- test
+  #- deploy
+
+before_script:
+  - apk add dotnet6-sdk
+
+build-sdk-windows:
+  stage: build
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  artifacts:
+    paths:
+      - build/release/sdk/
+  script:
+    - dotnet publish "./AvatarController/AvatarController.sln" -c "Release" -r win10-x64 -o "./build/release/sdk/" --no-self-contained
+
+build-release-windows:
+  stage: build
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  artifacts:
+    paths:
+      - build/release/
+  script:
+    - dotnet publish "./AvatarController/AvatarController/AvatarController.csproj" -c "Release" -r win10-x64 -o "./build/release/" /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
+
+#test:
+# stage: test
+  #script:
+    # The output path is relative to the position of the csproj-file
+    #- msbuild /p:Configuration="Debug" /p:Platform="Any CPU"
+    #  /p:OutputPath="./../../build/debug/" "MyProject.sln"
+    #- mono packages/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe build/debug/MyProject.Test.dll
+
+#deploy:
+ # stage: deploy
+ # script: echo "Define your deployment script!"
+ # environment: production

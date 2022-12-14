@@ -1,4 +1,7 @@
 # VRCAvatarOSCToolkit
+[![pipeline status](https://git.droppedtable.tech/avickrs/vrc-avatar-osc-toolkit/badges/main/pipeline.svg)](https://git.droppedtable.tech/avickrs/vrc-avatar-osc-toolkit/-/commits/main)
+[![Latest Release](https://git.droppedtable.tech/avickrs/vrc-avatar-osc-toolkit/-/badges/release.svg)](https://git.droppedtable.tech/avickrs/vrc-avatar-osc-toolkit/-/releases)
+[![coverage report](https://git.droppedtable.tech/avickrs/vrc-avatar-osc-toolkit/badges/main/coverage.svg)](https://git.droppedtable.tech/avickrs/vrc-avatar-osc-toolkit/-/commits/main)
 
 Provides an alternative to https://github.com/benaclejames/VRCFaceTracking that allows for more than just face tracking
 
