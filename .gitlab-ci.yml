@@ -28,7 +28,7 @@ stages:
   - deploy
 
 before_script:
-  - sudo apk add dotnet6-sdk
+  - apk add dotnet6-sdk
   - nuget restore "./AvatarController/AvatarController.sln" -NonInteractive
 
 build-release:
