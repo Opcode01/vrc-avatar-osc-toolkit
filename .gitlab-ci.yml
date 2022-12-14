@@ -20,7 +20,7 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Mono.gitlab-ci.yml
 
 # see https://hub.docker.com/_/mono/
-image: mono:latest
+image: alpine:latest
 
 stages:
   - build
@@ -28,9 +28,7 @@ stages:
   - deploy
 
 before_script:
-  - apt-get install wget
-  - wget https://dot.net/v1/dotnet-install.sh
-  - bash ./dotnet-install.sh -c 6.0
+  - sudo apk add dotnet6-sdk
   - nuget restore "./AvatarController/AvatarController.sln" -NonInteractive
 
 build-release:
@@ -42,8 +40,7 @@ build-release:
       - build/release/AvatarController.exe
   script:
     # The output path is relative to the position of the csproj-file
-    - msbuild /p:Configuration="Release" /p:Platform="Any CPU"
-      /p:OutputPath="./../../build/release/" "./AvatarController/AvatarController.sln"
+    - dotnet build "./AvatarController/AvatarController.sln" -c "Release" -o "./build/release/"
 
 #test:
 # stage: test
