@@ -18,6 +18,7 @@ build-release-windows:
   script:
     # The output path is relative to the position of the csproj-file
     - dotnet publish "./AvatarController/AvatarController.sln" -c "Release" -r win10-x64 -o "./build/release/"
+      /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
 
 #test:
 # stage: test
