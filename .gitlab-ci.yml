@@ -17,7 +17,7 @@ build-sdk-windows:
       - build/release/sdk/
   script:
     # The output path is relative to the position of the csproj-file
-    - dotnet publish "./AvatarController/AvatarController.sln" -c "Release" -r win10-x64 -o "./build/release/" --no-self-contained
+    - dotnet publish "./AvatarController/AvatarController.sln" -c "Release" -r win10-x64 -o "./build/release/sdk/" --no-self-contained
 
 build-release-windows:
   stage: build
