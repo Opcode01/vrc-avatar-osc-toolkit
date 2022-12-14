@@ -36,7 +36,7 @@ build-release:
     #- if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   artifacts:
     paths:
-      - build/release/AvatarController.exe
+      - build/release/
   script:
     # The output path is relative to the position of the csproj-file
     - dotnet build "./AvatarController/AvatarController.sln" -c "Release" -o "./build/release/"
