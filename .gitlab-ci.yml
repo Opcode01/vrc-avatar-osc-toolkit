@@ -29,7 +29,6 @@ stages:
 
 before_script:
   - apk add dotnet6-sdk
-  - nuget restore "./AvatarController/AvatarController.sln" -NonInteractive
 
 build-release:
   stage: build
