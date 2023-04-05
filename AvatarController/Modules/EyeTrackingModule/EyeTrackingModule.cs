@@ -25,9 +25,9 @@
                 return false;
             }
 
-            Console.WriteLine($"{this.GetType().Name} -- Initializing...");      //TODO: Better logging
+            Console.WriteLine($"{this.GetType().Name} -- Initializing...");             //TODO: Better logging
             _eyeTracking = new VarjoEyeTracking(_messageDistributor.GetNetworks());     //TODO: Config to allow for EyeTracking solutions other than Varjo
-            _isInitialized = _eyeTracking.Initialize();
+            _isInitialized = _eyeTracking.Initialize();                                 //TODO: Config to allow for using VRC builtin endpoints or benaclejames endpoints
 
             Console.WriteLine($"{this.GetType().Name} -- Init result: {_isInitialized}");    //TODO: Better logging
             return _isInitialized;

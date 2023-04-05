@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="address"></param>
         /// <param name="value"></param>
-        void SendMessage(string address, object value);
+        void SendMessage(string address, params object[] value);
 
         /// <summary>
         /// Event for when a message is received by this network

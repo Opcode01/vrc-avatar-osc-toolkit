@@ -48,11 +48,15 @@
             return _isInitialized;
         }
 
-        public void SendMessage(string address, object value)
+        public void SendMessage(string address, params object[] value)
         {
             var message = new SharpOSC.OscMessage(address, value);
             _udpSender.Send(message);
-            Console.WriteLine($"SEND: \t ENDPOINT: {HOST} \t ADDRESS: {address} \t VALUE: {value}"); //TODO: Better logging
+            string valString = "";
+            foreach (var obj in value)
+                valString += $"{obj.ToString()},  ";
+
+            Console.WriteLine($"SEND: \t ENDPOINT: {HOST} \t ADDRESS: {address} \t VALUE: {valString}"); //TODO: Better logging
         }
 
         public event EventHandler<MsgReceivedEventArgs>? MessageReceived;
