@@ -12,6 +12,37 @@ namespace VarjoNative
         public double x;
         public double y;
         public double z;
+
+        public Vector(double x, double y, double z)
+        {
+            this.x = x; this.y = y; this.z = z;
+        }
+
+        public double Magnitude()
+        {
+            return Math.Sqrt(x * x + y * y + z * z);
+        }
+
+        public Vector Normalized()
+        {
+            if(this.Magnitude() != 0)
+                return this / this.Magnitude();
+            else
+                return this;
+        }
+
+        public static Vector operator +(Vector a, Vector b) =>
+            new Vector(a.x + b.x, a.y + b.y, a.z + b.z);
+
+        public static Vector operator -(Vector a, Vector b) =>
+            new Vector(a.x - b.x, a.y - b.y, a.z - b.z);
+
+        public static Vector operator /(Vector a, double b)
+        {
+            if (b == 0)
+                throw new DivideByZeroException();
+            return new Vector(a.x / b, a.y / b, a.z / b);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]

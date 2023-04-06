@@ -78,6 +78,14 @@
             if (!success || gazeData.status != GazeStatus.Valid)
                 return;
 
+            Vector rightEyeRoot = new Vector(0, 0, 0);
+            Vector leftEyeRoot = new Vector(0, 0, 0);
+            Vector combinedEyeRoot = new Vector(0, 0, 0);
+
+            Vector rightEyeForward = new Vector(0, 0, 0);
+            Vector leftEyeForward = new Vector(0, 0, 0);
+            Vector combinedEyeForward = new Vector(0, 0, 0);
+
             double rightEyeX = 0.0000;
             double rightEyeY = 0.0000;
             double rightEyeZ = 0.0000;
@@ -92,6 +100,7 @@
             double rightEyeOpenness = eyeMeasurements.rightEyeOpenness;
             double leftEyeExpandedSqueeze = leftEyeOpenness;
             double rightEyeExpandedSqueeze = rightEyeOpenness;
+            double focusDistance = 1.0; //1m default
 
             bool leftEyeState = (gazeData.leftStatus != GazeEyeStatus.Invalid);
             bool rightEyeState = (gazeData.rightStatus != GazeEyeStatus.Invalid);
@@ -109,6 +118,12 @@
                 eyesY = combinedRay.forward.y;
                 eyesX = combinedRay.forward.x;
 
+                focusDistance = gazeData.focusDistance;
+
+                //Get eye origin
+                combinedEyeRoot = combinedRay.origin;
+                combinedEyeForward = combinedRay.forward;
+
                 //Process pupil size
                 pupilSize = (eyeMeasurements.leftPupilDiameterInMM + eyeMeasurements.rightPupilDiameterInMM) / 2;
             }
@@ -121,6 +136,8 @@
                     rightEyeX = rightEye.forward.x;
                     rightEyeY = rightEye.forward.y;
                     rightEyeZ = rightEye.forward.z;
+                    rightEyeRoot = rightEye.origin;
+                    rightEyeForward = rightEye.forward;
                     pupilSize = eyeMeasurements.rightPupilDiameterInMM;
                 }
                 if (leftEyeState)
@@ -129,6 +146,8 @@
                     leftEyeY = leftEye.forward.y;
                     leftEyeX = leftEye.forward.x;
                     leftEyeZ = leftEye.forward.z;
+                    leftEyeRoot = leftEye.origin;
+                    leftEyeForward = leftEye.forward;
                     pupilSize = eyeMeasurements.leftPupilDiameterInMM;
                 }
             }
@@ -177,12 +196,10 @@
             //Normalize values - default from -1.0 to 1.0
             rightEyeX = Math.Normalize(rightEyeX, _max_right_x, _min_right_x);
             rightEyeY = Math.Normalize(rightEyeY, _max_right_y, _min_right_y);
-            //rightEyeZ = Math.Normalize(rightEyeZ, _max_right_z, _min_right_z);
-            rightEyeZ = 0.5f;
+            rightEyeZ = Math.Normalize(rightEyeZ, _max_right_z, _min_right_z);
             leftEyeX =  Math.Normalize(leftEyeX,  _max_left_x,  _min_left_x);
             leftEyeY =  Math.Normalize(leftEyeY,  _max_left_y,  _min_left_y);
-            //leftEyeZ =  Math.Normalize(leftEyeZ,  _max_left_z,  _min_left_z);
-            leftEyeZ = 0.5f;
+            leftEyeZ =  Math.Normalize(leftEyeZ,  _max_left_z,  _min_left_z);            
             eyeDilation = Math.Normalize(pupilSize, _max_pupil_size, _min_pupil_size, 1.0f, 0.0f);
             leftEyeOpenness = Math.Normalize(leftEyeOpenness, _max_left_eye_open, _min_left_eye_open, 1.0000, 0.0000);
             rightEyeOpenness = Math.Normalize(rightEyeOpenness, _max_right_eye_open, _min_right_eye_open, 1.0000, 0.0000);
@@ -199,9 +216,22 @@
                         float AvgEyeClosedAmt = (float)(1.0 - ((leftEyeOpenness + rightEyeOpenness) / 2.0));
                         network.SendMessage("/tracking/eye/EyesClosedAmount", AvgEyeClosedAmt);
 
-                        //HMD local normalized directional vectors for each eye (left x,y,z right x,y,z)
-                        network.SendMessage("/tracking/eye/LeftRightVec", (float)leftEyeX, (float)leftEyeY, (float)leftEyeZ,
-                                                                          (float)rightEyeX, (float)rightEyeY, (float)rightEyeZ);
+                        //Use combined gaze
+                        if(leftEyeState && rightEyeState)
+                        {
+                            Vector centerLookDir = (combinedEyeForward - combinedEyeRoot);
+                            centerLookDir.z *= focusDistance;
+                            network.SendMessage("/tracking/eye/CenterVecFull", (float)centerLookDir.x, (float)centerLookDir.y, (float)centerLookDir.z);
+                        }
+                        else
+                        {
+                            //HMD local normalized directional vectors for each eye (left x,y,z right x,y,z)
+                            Vector leftEyeLookDir = (leftEyeForward - leftEyeRoot).Normalized();
+                            Vector rightEyeLookDir = (rightEyeForward - rightEyeRoot).Normalized();
+
+                            network.SendMessage("/tracking/eye/LeftRightVec", (float)leftEyeLookDir.x, (float)leftEyeLookDir.y, (float)leftEyeLookDir.z,
+                                                                              (float)rightEyeLookDir.x, (float)rightEyeLookDir.y, (float)rightEyeLookDir.z);
+                        }
                     }
                     else
                     {
