@@ -98,8 +98,6 @@
             double eyeDilation = 0.0000;
             double leftEyeOpenness = eyeMeasurements.leftEyeOpenness;
             double rightEyeOpenness = eyeMeasurements.rightEyeOpenness;
-            double leftEyeExpandedSqueeze = leftEyeOpenness;
-            double rightEyeExpandedSqueeze = rightEyeOpenness;
             double focusDistance = 1.0; //1m default
 
             bool leftEyeState = (gazeData.leftStatus != GazeEyeStatus.Invalid);
@@ -109,20 +107,21 @@
             {
                 //Both eyes good - use combined gaze
                 var combinedRay = gazeData.gaze;
-                rightEyeX = combinedRay.forward.x;
-                rightEyeY = combinedRay.forward.y;
-                rightEyeZ = combinedRay.forward.z;
-                leftEyeX = combinedRay.forward.x;
-                leftEyeY = combinedRay.forward.y;
-                leftEyeZ = combinedRay.forward.z;
-                eyesY = combinedRay.forward.y;
-                eyesX = combinedRay.forward.x;
-
                 focusDistance = gazeData.focusDistance;
 
                 //Get eye origin
                 combinedEyeRoot = combinedRay.origin;
                 combinedEyeForward = combinedRay.forward;
+
+                //Set legacy values for VRCFT
+                rightEyeX = combinedEyeForward.x;
+                rightEyeY = combinedEyeForward.y;
+                rightEyeZ = combinedEyeForward.z;
+                leftEyeX = combinedEyeForward.x;
+                leftEyeY = combinedEyeForward.y;
+                leftEyeZ = combinedEyeForward.z;
+                eyesX = combinedEyeForward.x;
+                eyesY = combinedEyeForward.y;
 
                 //Process pupil size
                 pupilSize = (eyeMeasurements.leftPupilDiameterInMM + eyeMeasurements.rightPupilDiameterInMM) / 2;
@@ -133,21 +132,29 @@
                 if (rightEyeState)
                 {
                     var rightEye = gazeData.rightEye;
-                    rightEyeX = rightEye.forward.x;
-                    rightEyeY = rightEye.forward.y;
-                    rightEyeZ = rightEye.forward.z;
                     rightEyeRoot = rightEye.origin;
                     rightEyeForward = rightEye.forward;
+
+                    //Set legacy values for VRCFT
+                    rightEyeX = rightEyeForward.x;
+                    rightEyeY = rightEyeForward.y;
+                    rightEyeZ = rightEyeForward.z;
+                    
+                    //Process pupil size
                     pupilSize = eyeMeasurements.rightPupilDiameterInMM;
                 }
                 if (leftEyeState)
                 {
                     var leftEye = gazeData.leftEye;
-                    leftEyeY = leftEye.forward.y;
-                    leftEyeX = leftEye.forward.x;
-                    leftEyeZ = leftEye.forward.z;
                     leftEyeRoot = leftEye.origin;
                     leftEyeForward = leftEye.forward;
+
+                    //Set legacy values for VRCFT
+                    leftEyeX = leftEyeForward.x;
+                    leftEyeY = leftEyeForward.y;
+                    leftEyeZ = leftEyeForward.z;
+
+                    //Process pupil size
                     pupilSize = eyeMeasurements.leftPupilDiameterInMM;
                 }
             }
@@ -193,18 +200,19 @@
             if (rightEyeOpenness < _min_right_eye_open)
                 _min_right_eye_open = rightEyeOpenness;
 
-            //Normalize values - default from -1.0 to 1.0
+            //Normalize values - default from -1.0 to 1.0                       
+            //Expanded Squeeze goes from -1 to 1, while expanded goes from 0 to 1
+            double leftEyeExpandedSqueeze = Math.Normalize(leftEyeOpenness, _max_left_eye_open, _min_left_eye_open);
+            double rightEyeExpandedSqueeze = Math.Normalize(rightEyeOpenness, _max_right_eye_open, _min_right_eye_open);
+            leftEyeOpenness = Math.Normalize(leftEyeOpenness, _max_left_eye_open, _min_left_eye_open, 1.0000, 0.0000);
+            rightEyeOpenness = Math.Normalize(rightEyeOpenness, _max_right_eye_open, _min_right_eye_open, 1.0000, 0.0000);
+            eyeDilation = Math.Normalize(pupilSize, _max_pupil_size, _min_pupil_size, 1.0f, 0.0f);
             rightEyeX = Math.Normalize(rightEyeX, _max_right_x, _min_right_x);
             rightEyeY = Math.Normalize(rightEyeY, _max_right_y, _min_right_y);
             rightEyeZ = Math.Normalize(rightEyeZ, _max_right_z, _min_right_z);
-            leftEyeX =  Math.Normalize(leftEyeX,  _max_left_x,  _min_left_x);
-            leftEyeY =  Math.Normalize(leftEyeY,  _max_left_y,  _min_left_y);
-            leftEyeZ =  Math.Normalize(leftEyeZ,  _max_left_z,  _min_left_z);            
-            eyeDilation = Math.Normalize(pupilSize, _max_pupil_size, _min_pupil_size, 1.0f, 0.0f);
-            leftEyeOpenness = Math.Normalize(leftEyeOpenness, _max_left_eye_open, _min_left_eye_open, 1.0000, 0.0000);
-            rightEyeOpenness = Math.Normalize(rightEyeOpenness, _max_right_eye_open, _min_right_eye_open, 1.0000, 0.0000);
-            leftEyeExpandedSqueeze = Math.Normalize(leftEyeExpandedSqueeze, _max_left_eye_open, _min_left_eye_open);
-            rightEyeExpandedSqueeze = Math.Normalize(rightEyeExpandedSqueeze, _max_right_eye_open, _min_right_eye_open);
+            leftEyeX = Math.Normalize(leftEyeX, _max_left_x, _min_left_x);
+            leftEyeY = Math.Normalize(leftEyeY, _max_left_y, _min_left_y);
+            leftEyeZ = Math.Normalize(leftEyeZ, _max_left_z, _min_left_z);
 
             foreach (var network in _networks)
             {
@@ -212,23 +220,24 @@
                 {
                     if (_useVRCEndpoints)
                     {
-                        //Tracking eye lids (blink)
+                        //HMD local directional vectors for each eye (left x,y,z right x,y,z)
+                        Vector leftEyeLookDir = (leftEyeForward - leftEyeRoot).Normalized();
+                        Vector rightEyeLookDir = (rightEyeForward - rightEyeRoot).Normalized();
+                        Vector centerLookDir = (combinedEyeForward - combinedEyeRoot);
+
+                        //Tracking eye lids (combined blink only)
                         float AvgEyeClosedAmt = (float)(1.0 - ((leftEyeOpenness + rightEyeOpenness) / 2.0));
                         network.SendMessage("/tracking/eye/EyesClosedAmount", AvgEyeClosedAmt);
 
                         //Use combined gaze
                         if(leftEyeState && rightEyeState)
                         {
-                            Vector centerLookDir = (combinedEyeForward - combinedEyeRoot);
                             centerLookDir.z *= focusDistance;
                             network.SendMessage("/tracking/eye/CenterVecFull", (float)centerLookDir.x, (float)centerLookDir.y, (float)centerLookDir.z);
                         }
                         else
                         {
-                            //HMD local normalized directional vectors for each eye (left x,y,z right x,y,z)
-                            Vector leftEyeLookDir = (leftEyeForward - leftEyeRoot).Normalized();
-                            Vector rightEyeLookDir = (rightEyeForward - rightEyeRoot).Normalized();
-
+                            //HMD normalized local directional vectors for each eye (left x,y,z right x,y,z) 
                             network.SendMessage("/tracking/eye/LeftRightVec", (float)leftEyeLookDir.x, (float)leftEyeLookDir.y, (float)leftEyeLookDir.z,
                                                                               (float)rightEyeLookDir.x, (float)rightEyeLookDir.y, (float)rightEyeLookDir.z);
                         }
@@ -250,10 +259,10 @@
                         network.SendMessage("/avatar/parameters/EyesPupilDiameter", (pupilSize > 10.0f || pupilSize == 0.0f) ? 1 : (float)pupilSize / 10.0f); //NOTE: PupilDiameter for VRCFT is in CM not MM
                         network.SendMessage("/avatar/parameters/EyesDilation", (float)eyeDilation);
 
-                        //Tracking eye lids
+                        //Tracking eye lids (wink enabled)
                         network.SendMessage("/avatar/parameters/LeftEyeLidExpanded", (float)leftEyeOpenness);
                         network.SendMessage("/avatar/parameters/RightEyeLidExpanded", (float)rightEyeOpenness);
-                        network.SendMessage("/avatar/parameters/LeftEyeLidExpandedSqueeze", (float)leftEyeExpandedSqueeze);
+                        network.SendMessage("/avatar/parameters/LeftEyeLidExpandedSqueeze", (float)leftEyeExpandedSqueeze);    //Some avatars use expanded squeeze instead
                         network.SendMessage("/avatar/parameters/RightEyeLidExpandedSqueeze", (float)rightEyeExpandedSqueeze);
                     }
                 }
